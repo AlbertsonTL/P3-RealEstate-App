@@ -26,8 +26,8 @@
 @* Cabecera *@
 <div class="d-flex align-items-center gap-3 mb-4">
     <div>
-        <h1 style="font-size:1.4rem;margin:0;">Mi Perfil</h1>
-        <p style="font-size:0.85rem;color:var(--text-3);margin:0;">
+        <h1 class="page-title">Mi Perfil</h1>
+        <p class="page-subtitle">
             Actualiza tu información personal y tu contraseña
         </p>
     </div>
@@ -75,8 +75,7 @@
                             <div class="text-center mb-4">
                                 <img src="@perfil.UrlFotoActual"
                                      alt="Foto de perfil"
-                                     class="rounded-circle border"
-                                     style="width:90px;height:90px;object-fit:cover;" />
+                                     class="rounded-circle border avatar-img avatar-90" />
                                 <p class="text-muted small mt-1 mb-0">Foto actual</p>
                             </div>
                         }
@@ -158,7 +157,7 @@
                                             </div>
                                         }
                                     </div>
-                                    <p class="form-text" style="color:var(--text-3);font-size:0.78rem;margin-top:0.25rem;">
+                                    <p class="form-text form-hint">
                                         Si cambias tu correo tendrás que usarlo para iniciar sesión.
                                     </p>
                                 </div>
@@ -175,14 +174,13 @@
                                            accept="image/*"
                                            class="form-control"
                                            onchange="previsualizarFoto(this)" />
-                                    <p class="form-text" style="color:var(--text-3);font-size:0.78rem;margin-top:0.25rem;">
+                                    <p class="form-text form-hint">
                                         Formatos: JPG, PNG, WEBP. Máximo 2 MB.
                                     </p>
                                     <img id="preview-foto"
                                          src="#"
                                          alt="Vista previa"
-                                         class="rounded-circle border mt-1 d-none"
-                                         style="width:70px;height:70px;object-fit:cover;" />
+                                         class="rounded-circle border mt-1 d-none avatar-img avatar-70" />
                                 </div>
 
                                 <div class="col-12 pt-1">

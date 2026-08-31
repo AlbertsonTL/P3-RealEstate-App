@@ -7,7 +7,7 @@
 <div class="admin-page-header d-flex align-items-start justify-content-between flex-wrap gap-2">
     <div>
         <h1>Gestión de Agentes</h1>
-        <p class="page-sub">Administra el estado y acceso de los agentes registrados</p>
+        <p class="page-subtitle">Administra el estado y acceso de los agentes registrados</p>
     </div>
     <span class="badge text-bg-primary align-self-center fs-6 px-3 py-2">@Model.Count agentes</span>
 </div>
@@ -45,19 +45,19 @@
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center gap-2">
-                                    <div style="width:34px;height:34px;border-radius:50%;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;color:var(--accent);flex-shrink:0;">
+                                    <div class="icon-badge icon-badge-34 icon-badge--accent">
                                         @agente.Nombre.FirstOrDefault()@agente.Apellido.FirstOrDefault()
                                     </div>
-                                    <span style="font-weight:600;font-size:0.9rem;">@agente.Nombre @agente.Apellido</span>
+                                    <span class="td-strong">@agente.Nombre @agente.Apellido</span>
                                 </div>
                             </td>
-                            <td style="color:var(--text-2);font-size:0.875rem;">@agente.Correo</td>
+                            <td class="td-muted">@agente.Correo</td>
                             <td>
                                 <span class="badge text-bg-primary">@agente.CantidadPropiedades</span>
                             </td>
                             <td>
                                 <span class="badge @(agente.EstaActivo ? "text-bg-success" : "text-bg-secondary")">
-                                    <i class="bi @(agente.EstaActivo ? "bi-circle-fill" : "bi-circle") me-1" style="font-size:0.5rem;vertical-align:middle;"></i>
+                                    <i class="bi @(agente.EstaActivo ? "bi-circle-fill" : "bi-circle") me-1 badge-dot"></i>
                                     @(agente.EstaActivo ? "Activo" : "Inactivo")
                                 </span>
                             </td>
@@ -71,7 +71,9 @@
                                         </button>
                                     </form>
                                     <form asp-action="EliminarAgente" method="post" class="m-0"
-                                          onsubmit="return confirm('¿Eliminar este agente?');">
+                                          data-confirmar-eliminar
+                                          data-titulo-eliminar="Eliminar agente"
+                                          data-mensaje-eliminar="¿Deseas eliminar este agente? Esta acción no se puede deshacer.">
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="id" value="@agente.Id" />
                                         <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>

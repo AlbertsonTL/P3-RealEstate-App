@@ -12,9 +12,8 @@
     </div>
     <div class="tarjeta-body">
         <div class="d-flex justify-content-between align-items-center mb-1">
-            <span
-            style="font-size:0.78rem;color:var(--text-3);font-weight:600;letter-spacing:0.03em;text-transform:uppercase;">@Model.TipoVenta</span>
-            <code style="font-size:0.72rem;color:var(--text-3);">@Model.Codigo</code>
+            <span class="item-tag">@Model.TipoVenta</span>
+            <code class="item-code">@Model.Codigo</code>
         </div>
         <div class="tarjeta-precio">RD$ @Model.Precio.ToString("N0")</div>
         <div class="tarjeta-meta">

@@ -2,7 +2,7 @@
 @{ Layout = "_LayoutAdmin"; ViewData["Title"] = "Administradores"; }
 
 <div class="admin-page-header d-flex align-items-start justify-content-between flex-wrap gap-2">
-    <div><h1>Administradores</h1><p class="page-sub">Gestiona los usuarios con rol de administrador</p></div>
+    <div><h1>Administradores</h1><p class="page-subtitle">Gestiona los usuarios con rol de administrador</p></div>
     <span class="badge text-bg-primary align-self-center fs-6 px-3 py-2">@Model.Count registros</span>
 </div>
 @if (TempData["Exito"] is string exito) { <div class="alert alert-success mb-3"><i class="bi bi-check-circle me-2"></i>@exito</div> }
@@ -40,11 +40,11 @@
                     @foreach (var admin in Model) {
                     var esSelf = admin.Id == currentId;
                     <tr>
-                        <td><span style="font-weight:600;font-size:0.9rem;">@admin.Nombre @admin.Apellido</span></td>
-                        <td style="color:var(--text-2);font-size:0.875rem;">@admin.UserName</td>
-                        <td style="color:var(--text-2);font-size:0.875rem;">@admin.Email</td>
-                        <td style="color:var(--text-3);font-size:0.875rem;">@admin.Cedula</td>
-                        <td style="color:var(--text-3);font-size:0.875rem;">@admin.Telefono</td>
+                        <td><span class="td-strong">@admin.Nombre @admin.Apellido</span></td>
+                        <td class="td-muted">@admin.UserName</td>
+                        <td class="td-muted">@admin.Email</td>
+                        <td class="td-faint">@admin.Cedula</td>
+                        <td class="td-faint">@admin.Telefono</td>
                         <td class="text-center">
                             <span class="badge @(admin.EstaActivo ? "text-bg-success" : "text-bg-secondary")">
                                 @(admin.EstaActivo ? "Activo" : "Inactivo")
@@ -61,7 +61,7 @@
                                             @(admin.EstaActivo ? "Inactivar" : "Activar")
                                         </button>
                                     </form>
-                                    <form asp-action="EliminarAdministrador" method="post" class="m-0" onsubmit="return confirm('¿Eliminar administrador?');">
+                                    <form asp-action="EliminarAdministrador" method="post" class="m-0" data-confirmar-eliminar data-titulo-eliminar="Eliminar administrador" data-mensaje-eliminar="¿Deseas eliminar este administrador? Esta acción no se puede deshacer.">
                                         @Html.AntiForgeryToken()<input type="hidden" name="id" value="@admin.Id" />
                                         <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
                                     </form>

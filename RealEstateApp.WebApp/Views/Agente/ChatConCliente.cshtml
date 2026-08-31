@@ -8,8 +8,8 @@
         <i class="bi bi-arrow-left"></i>
     </a>
     <div>
-        <h1 style="font-size:1.4rem;margin:0;">Chat con cliente</h1>
-        <p style="font-size:0.85rem;color:var(--text-3);margin:0;">Conversación directa</p>
+        <h1 class="page-title">Chat con cliente</h1>
+        <p class="page-subtitle">Conversación directa</p>
     </div>
 </div>
 
@@ -19,14 +19,14 @@
     <div class="col-lg-8">
         <div class="card">
             <div class="card-header d-flex align-items-center gap-2">
-                <i class="bi bi-chat-dots-fill" style="color:var(--accent);"></i>
+                <i class="bi bi-chat-dots-fill text-accent"></i>
                 Conversación
             </div>
             <div class="card-body">
-                <div style="max-height:420px;overflow-y:auto;padding-right:0.25rem;" class="mb-3" id="chatArea">
+                <div class="chat-scroll-area mb-3" id="chatArea">
                     @if (!Model.Mensajes.Any())
                     {
-                        <div class="empty-state" style="padding:2rem 1rem;">
+                        <div class="empty-state empty-state--compact">
                             <i class="bi bi-chat-square empty-icon"></i>
                             <p>Sin mensajes aún.</p>
                         </div>
@@ -38,7 +38,7 @@
                             <div class="@(m.EsMio ? "chat-burbuja-mia" : "chat-burbuja-otro")">
                                 <div class="chat-bubble">
                                     <div>@m.Contenido</div>
-                                    <small style="font-size:0.7rem;opacity:0.65;display:block;margin-top:0.2rem;">@m.FechaEnvio.ToLocalTime().ToString("g")</small>
+                                    <small class="chat-timestamp">@m.FechaEnvio.ToLocalTime().ToString("g")</small>
                                 </div>
                             </div>
                         }

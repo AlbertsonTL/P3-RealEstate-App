@@ -4,75 +4,6 @@
     Layout = "_Layout";
 }
 
-<style>
-    .auth-page {
-        min-height: calc(100vh - 72px);
-        display: flex; align-items: center; justify-content: center;
-        padding: 2rem 1rem;
-        background: linear-gradient(135deg, var(--bg) 0%, var(--surface-2) 100%);
-    }
-    .auth-container { width: 100%; max-width: 440px; }
-    .auth-logo { text-align: center; margin-bottom: 2rem; }
-    .auth-logo-icon {
-        width: 64px; height: 64px;
-        display: inline-flex; align-items: center; justify-content: center;
-        font-size: 1.5rem; color: #fff; margin-bottom: .75rem;
-    }
-    .auth-logo-icon img {
-        width: 100%; height: 100%; object-fit: contain; display: block;
-    }
-    .auth-logo h1 { font-size: 1.5rem; font-weight: 700; color: var(--text-1); margin: 0; letter-spacing: -.02em; }
-    .auth-logo p { color: var(--text-3); font-size: .875rem; margin: .25rem 0 0; }
-    .auth-card {
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: var(--radius-xl); padding: 2rem; box-shadow: var(--shadow-lg);
-    }
-    .auth-card .form-label { font-size: .8125rem; font-weight: 600; color: var(--text-2); margin-bottom: .375rem; }
-    .input-wrap { position: relative; }
-    .input-wrap .form-control { padding-right: 2.75rem; }
-    .auth-card .form-control {
-        background: var(--surface-2); border: 1.5px solid var(--border-strong);
-        border-radius: var(--radius-sm); color: var(--text-1); font-size: .9375rem; height: 46px;
-        transition: border-color .2s, box-shadow .2s, background .2s;
-    }
-    .auth-card .form-control:focus {
-        background: var(--surface); border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(41,83,224,.12); outline: none;
-    }
-    .btn-eye {
-        position: absolute; right: .75rem; top: 50%; transform: translateY(-50%);
-        background: none; border: none; padding: 0; color: var(--text-3);
-        cursor: pointer; font-size: 1rem; line-height: 1;
-        display: flex; align-items: center; transition: color .15s; z-index: 5;
-    }
-    .btn-eye:hover { color: var(--accent); }
-    .btn-auth-primary {
-        width: 100%; height: 46px; background: var(--accent); color: #fff;
-        border: none; border-radius: var(--radius-sm);
-        font-size: .9375rem; font-weight: 600;
-        cursor: pointer; transition: background .2s, transform .1s, box-shadow .2s;
-        box-shadow: 0 4px 14px rgba(41,83,224,.28);
-        display: flex; align-items: center; justify-content: center; gap: .5rem;
-    }
-    .btn-auth-primary:hover { background: var(--accent-h); box-shadow: 0 6px 18px rgba(41,83,224,.38); }
-    .btn-auth-primary:active { transform: scale(.98); }
-    .alert-auth {
-        background: var(--red-soft); border: 1px solid rgba(220,38,38,.2);
-        border-radius: var(--radius-sm); color: var(--red-text);
-        padding: .75rem 1rem; font-size: .875rem;
-        display: flex; align-items: flex-start; gap: .5rem; margin-bottom: 1.25rem;
-    }
-    .text-danger { font-size: .75rem; margin-top: .25rem; display: block; }
-    .back-link {
-        display: flex; align-items: center; gap: .375rem;
-        font-size: .875rem; color: var(--text-3); text-decoration: none;
-        margin-top: 1.25rem; justify-content: center; transition: color .15s;
-    }
-    .back-link:hover { color: var(--accent); }
-    .pass-strength { height: 4px; border-radius: 2px; margin-top: .375rem; background: var(--border); overflow: hidden; }
-    .pass-strength-bar { height: 100%; width: 0; border-radius: 2px; transition: width .3s, background .3s; }
-</style>
-
 <div class="auth-page">
     <div class="auth-container">
         <div class="auth-logo">
@@ -84,7 +15,7 @@
             @if (!ViewData.ModelState.IsValid && ViewData.ModelState.Values.Any(v => v.Errors.Count > 0))
             {
                 <div class="alert-auth">
-                    <i class="bi bi-exclamation-circle-fill" style="margin-top:1px;flex-shrink:0;"></i>
+                    <i class="bi bi-exclamation-circle-fill"></i>
                     <div>
                         @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
                         {

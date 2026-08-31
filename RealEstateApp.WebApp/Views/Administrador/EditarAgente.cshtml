@@ -17,12 +17,10 @@
                     <div class="d-flex align-items-center gap-3">
                         <img id="imgPreview" src="@(string.IsNullOrEmpty(Model.UrlFoto) ? "" : Model.UrlFoto)"
                             alt="Foto Agente"
-                            class="rounded-circle border shadow-sm @(string.IsNullOrEmpty(Model.UrlFoto) ? "d-none" : "")"
-                            style="width:100px;height:100px;object-fit:cover;" />
+                            class="rounded-circle border shadow-sm avatar-img avatar-100 @(string.IsNullOrEmpty(Model.UrlFoto) ? "d-none" : "")" />
 
                         <div id="noPhotoIcon"
-                            class="rounded-circle bg-light d-flex align-items-center justify-content-center border @(!string.IsNullOrEmpty(Model.UrlFoto) ? "d-none" : "")"
-                            style="width:100px;height:100px;color:#999;">
+                            class="rounded-circle bg-light d-flex align-items-center justify-content-center border form-photo-placeholder @(!string.IsNullOrEmpty(Model.UrlFoto) ? "d-none" : "")">
                             <i class="bi bi-person-fill fs-1"></i>
                         </div>
 

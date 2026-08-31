@@ -4,115 +4,8 @@
     Layout = "_Layout";
 }
 
-<style>
-    .auth-page {
-        min-height: calc(100vh - 72px);
-        display: flex; align-items: center; justify-content: center;
-        padding: 3rem 1rem;
-        background: linear-gradient(135deg, var(--bg) 0%, var(--surface-2) 100%);
-    }
-    .auth-container { width: 100%; max-width: 640px; }
-    .auth-logo { text-align: center; margin-bottom: 2rem; }
-    .auth-logo-icon {
-        width: 64px; height: 64px;
-        display: inline-flex; align-items: center; justify-content: center;
-        font-size: 1.5rem; color: #fff; margin-bottom: .75rem;
-    }
-    .auth-logo-icon img {
-        width: 100%; height: 100%; object-fit: contain; display: block;
-    }
-    .auth-logo h1 {
-        font-size: 1.5rem; font-weight: 700; color: var(--text-1);
-        margin: 0; letter-spacing: -.02em;
-    }
-    .auth-logo p { color: var(--text-3); font-size: .875rem; margin: .25rem 0 0; }
-    .auth-card {
-        background: var(--surface); border: 1px solid var(--border);
-        border-radius: var(--radius-xl);
-        padding: 2rem 2rem 1.75rem; box-shadow: var(--shadow-lg);
-    }
-    .section-title {
-        font-size: .6875rem; font-weight: 700; letter-spacing: .08em;
-        text-transform: uppercase; color: var(--text-3);
-        margin: 0 0 .875rem; padding-bottom: .5rem;
-        border-bottom: 1px solid var(--border);
-    }
-    .auth-card .form-label {
-        font-size: .8125rem; font-weight: 600; color: var(--text-2);
-        margin-bottom: .375rem; letter-spacing: .01em;
-    }
-    .auth-card .form-control,
-    .auth-card .form-select {
-        background: var(--surface-2); border: 1.5px solid var(--border-strong);
-        border-radius: var(--radius-sm); color: var(--text-1);
-        font-size: .9375rem; height: 46px;
-        transition: border-color .2s, box-shadow .2s, background .2s;
-    }
-    .auth-card .form-control:focus,
-    .auth-card .form-select:focus {
-        background: var(--surface); border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(41,83,224,.12); outline: none;
-    }
-    .auth-card .form-control[type="file"] { height: auto; padding: .5rem .75rem; }
-    .input-wrap { position: relative; }
-    .input-wrap .form-control { padding-right: 2.75rem; }
-    .btn-eye {
-        position: absolute; right: .75rem; top: 50%; transform: translateY(-50%);
-        background: none; border: none; padding: 0; color: var(--text-3);
-        cursor: pointer; font-size: 1rem; line-height: 1;
-        display: flex; align-items: center; transition: color .15s; z-index: 5;
-    }
-    .btn-eye:hover { color: var(--accent); }
-    .btn-auth-primary {
-        width: 100%; height: 48px; background: var(--accent); color: #fff;
-        border: none; border-radius: var(--radius-sm);
-        font-size: .9375rem; font-weight: 600; letter-spacing: .01em;
-        cursor: pointer; transition: background .2s, transform .1s, box-shadow .2s;
-        box-shadow: 0 4px 14px rgba(41,83,224,.28);
-        display: flex; align-items: center; justify-content: center; gap: .5rem;
-    }
-    .btn-auth-primary:hover { background: var(--accent-h); box-shadow: 0 6px 18px rgba(41,83,224,.38); }
-    .btn-auth-primary:active { transform: scale(.98); }
-    .auth-footer {
-        text-align: center; margin-top: 1.5rem;
-        font-size: .875rem; color: var(--text-3);
-    }
-    .auth-footer a { color: var(--accent); font-weight: 600; text-decoration: none; }
-    .auth-footer a:hover { text-decoration: underline; }
-    .alert-auth {
-        background: var(--red-soft); border: 1px solid rgba(220,38,38,.2);
-        border-radius: var(--radius-sm); color: var(--red-text);
-        padding: .75rem 1rem; font-size: .875rem;
-        display: flex; align-items: flex-start; gap: .5rem; margin-bottom: 1.25rem;
-    }
-    .alert-auth i { margin-top: 1px; flex-shrink: 0; }
-    .text-danger { font-size: .75rem; margin-top: .25rem; display: block; }
-    .role-selector { display: flex; gap: .75rem; }
-    .role-btn {
-        flex: 1; height: 56px; border: 1.5px solid var(--border-strong);
-        border-radius: var(--radius-sm); background: var(--surface-2);
-        color: var(--text-2); font-size: .875rem; font-weight: 600;
-        cursor: pointer; display: flex; align-items: center; justify-content: center;
-        gap: .5rem; transition: all .2s;
-    }
-    .role-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
-    .role-btn.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); box-shadow: 0 0 0 3px rgba(41,83,224,.12); }
-    .role-btn i { font-size: 1.1rem; }
-    .photo-label {
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        gap: .5rem; height: 80px; border: 1.5px dashed var(--border-strong);
-        border-radius: var(--radius-sm); background: var(--surface-2);
-        color: var(--text-3); font-size: .8125rem; cursor: pointer;
-        transition: border-color .2s, color .2s;
-    }
-    .photo-label:hover { border-color: var(--accent); color: var(--accent); }
-    .photo-label i { font-size: 1.25rem; }
-    #fotoUsuarioInput { display: none; }
-    #photoPreview { display:none; width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid var(--accent); }
-</style>
-
-<div class="auth-page">
-    <div class="auth-container">
+<div class="auth-page auth-page--spacious">
+    <div class="auth-container auth-container--wide">
         <div class="auth-logo">
             <div class="auth-logo-icon"><img src="~/logo.png" alt="RealEstateApp logo" /></div>
             <h1>Crear cuenta</h1>
@@ -200,7 +93,7 @@
                     </div>
                 </div>
 
-                <p class="section-title">Foto de perfil <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.75rem;">(opcional)</span></p>
+                <p class="section-title">Foto de perfil <span class="section-title__note">(opcional)</span></p>
                 <div class="mb-4 d-flex align-items-center gap-3">
                     <img id="photoPreview" src="" alt="Vista previa" />
                     <label class="photo-label flex-grow-1" for="fotoUsuarioInput">

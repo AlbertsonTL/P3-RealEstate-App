@@ -6,8 +6,8 @@
 <div class="d-flex align-items-center gap-3 mb-4">
     <a asp-action="Mantenimiento" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i></a>
     <div>
-        <h1 style="font-size:1.4rem;margin:0;">Ofertas de clientes</h1>
-        <p style="font-size:0.85rem;color:var(--text-3);margin:0;">Clientes con ofertas en esta propiedad</p>
+        <h1 class="page-title">Ofertas de clientes</h1>
+        <p class="page-subtitle">Clientes con ofertas en esta propiedad</p>
     </div>
 </div>
 
@@ -28,8 +28,7 @@ else
             @{int idx = 0;}
             @foreach (var cliente in Model.Clientes)
             {
-                <li class="d-flex align-items-center justify-content-between px-4 py-3 @(idx++ < Model.Clientes.Count() - 1 ? "border-bottom" : "")"
-                    style="border-color:var(--border) !important;">
+                <li class="d-flex align-items-center justify-content-between px-4 py-3 @(idx++ < Model.Clientes.Count() - 1 ? "border-bottom" : "")">
 
                     @* Avatar + info *@
                     <div class="d-flex align-items-center gap-3">
@@ -37,17 +36,17 @@ else
                         {
                             <img src="@cliente.UrlFoto"
                                  alt="Foto de @cliente.NombreCompleto"
-                                 style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--border);" />
+                                 class="avatar-img avatar-44 avatar-img--bordered" />
                         }
                         else
                         {
-                            <div style="width:44px;height:44px;border-radius:50%;background:var(--green-soft);display:flex;align-items:center;justify-content:center;color:var(--green);font-size:1.2rem;flex-shrink:0;">
+                            <div class="icon-badge icon-badge-44 icon-badge--green">
                                 <i class="bi bi-person-fill"></i>
                             </div>
                         }
                         <div>
-                            <div style="font-weight:600;font-size:0.92rem;line-height:1.2;">@cliente.NombreCompleto</div>
-                            <div style="font-size:0.8rem;color:var(--text-3);margin-top:1px;">@cliente.NombreUsuario</div>
+                            <div class="client-name">@cliente.NombreCompleto</div>
+                            <div class="client-username">@cliente.NombreUsuario</div>
                         </div>
                     </div>
 
