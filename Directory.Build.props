@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <!-- Enforce consistent MailKit version across all projects -->
+    <MailKitVersion>4.15.1</MailKitVersion>
+    <MimeKitVersion>4.15.1</MimeKitVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Force all projects to use the same MailKit version -->
+    <PackageReference Update="MailKit" Version="$(MailKitVersion)" />
+    <PackageReference Update="MimeKit" Version="$(MimeKitVersion)" />
+  </ItemGroup>
+</Project>
