@@ -1,0 +1,220 @@
+@model RealEstateApp.WebApp.ViewModels.Publico.PropiedadDetalleViewModel
+@using RealEstateApp.Core.Domain.Enumeraciones
+@{
+    ViewData["Title"] = $"Propiedad {Model.Codigo}";
+    var imagenes = Model.UrlsImagenes.Any() ? Model.UrlsImagenes : new List<string> { "/images/placeholder-property.jpg" };
+}
+
+@if (TempData["Exito"] is string exito)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @exito
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+}
+@if (TempData["Error"] is string err)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @err
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+    </div>
+}
+
+<div class="mb-3">
+    <a href="javascript:history.back();" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left"></i> Volver atrás
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div id="carruselDetalle" class="carousel slide mb-4 shadow-sm rounded overflow-hidden" data-bs-ride="carousel">
+            <div class="carousel-indicators">
+                @for (var i = 0; i < imagenes.Count; i++)
+                {
+                    <button type="button" data-bs-target="#carruselDetalle" data-bs-slide-to="@i" class="@(i == 0 ? "active" : null)" aria-current="@(i == 0 ? "true" : null)" aria-label="Imagen @(i + 1)"></button>
+                }
+            </div>
+            <div class="carousel-inner">
+                @for (var i = 0; i < imagenes.Count; i++)
+                {
+                    <div class="carousel-item @(i == 0 ? "active" : null)">
+                        <img src="@imagenes[i]" class="d-block w-100" alt="Imagen @(i + 1) de la propiedad" style="max-height: 420px; object-fit: cover;" />
+                    </div>
+                }
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carruselDetalle" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carruselDetalle" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Siguiente</span>
+            </button>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-2">
+                    <div>
+                        <h2 class="h4 text-muted mb-1">@Model.TipoPropiedad — @Model.TipoVenta</h2>
+                        <div class="d-flex flex-wrap align-items-center gap-2">
+                            <span class="text-muted small">Codigo:</span>
+                            <code id="codigoPropiedad" class="fs-6">@Model.Codigo</code>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="btnCopiarCodigo" title="Copiar codigo">
+                                <i class="bi bi-clipboard"></i> Copiar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        @if (User.IsInRole("Cliente"))
+                        {
+                            <button type="button"
+                                    id="btnFavorito"
+                                    class="btn-favorito @(Model.EsFavorita ? "activo" : "")"
+                                    data-propiedad-id="@Model.Id"
+                                    data-es-favorita="@(Model.EsFavorita ? "true" : "false")"
+                                    title="@(Model.EsFavorita ? "Quitar de favoritos" : "Agregar a favoritos")">
+                                <i class="bi @(Model.EsFavorita ? "bi-heart-fill" : "bi-heart") fav-icon"></i>
+                                <span class="fav-label">@(Model.EsFavorita ? "En favoritos" : "Agregar a favoritos")</span>
+                            </button>
+                        }
+                        @if (Model.Estado == EstadoPropiedad.Vendida)
+                        {
+                            <span class="badge bg-danger fs-6">Vendida</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success fs-6">Disponible</span>
+                        }
+                    </div>
+                </div>
+                <h3 class="text-primary h4">RD$ @Model.Precio.ToString("N0")</h3>
+                <div class="row small text-muted mb-3 g-2">
+                    <div class="col-auto"><i class="bi bi-door-open"></i> @Model.CantidadHabitaciones hab.</div>
+                    <div class="col-auto"><i class="bi bi-droplet"></i> @Model.CantidadBanos banos</div>
+                    <div class="col-auto"><i class="bi bi-rulers"></i> @Model.TamañoMetros m2</div>
+                </div>
+                @if (Model.NombresMejoras.Any())
+                {
+                    <div class="mb-3">
+                        <span class="text-muted small d-block mb-1">Mejoras</span>
+                        <div class="d-flex flex-wrap gap-1">
+                            @foreach (var m in Model.NombresMejoras)
+                            {
+                                <span class="badge rounded-pill text-bg-light border">@m</span>
+                            }
+                        </div>
+                    </div>
+                }
+                <p class="text-muted mb-0">@Model.Descripcion</p>
+            </div>
+        </div>
+
+        @if (User.IsInRole("Agente") && Model.EsPropietarioAgente)
+        {
+            <partial name="_DetalleAgentePropietario" model="Model" />
+        }
+
+        @if (User.IsInRole("Cliente"))
+        {
+            <partial name="_DetalleClientePropiedad" model="Model" />
+        }
+        else if (!User.Identity!.IsAuthenticated)
+        {
+            <div class="alert alert-light border mt-4">
+                Para <strong>chatear con el agente</strong> o <strong>enviar una oferta</strong>,
+                <a asp-controller="Cuenta" asp-action="Login">inicie sesion</a>
+                con una cuenta de cliente.
+            </div>
+        }
+        else if (User.IsInRole("Agente") && !Model.EsPropietarioAgente)
+        {
+            <p class="text-muted small mt-4 mb-0">Como agente, solo el propietario de la publicacion gestiona chat y ofertas desde su panel.</p>
+        }
+    </div>
+
+    <div class="col-lg-4 mt-2">
+        <div class="card shadow-sm sticky-top" style="top: 1rem;">
+            <div class="card-body text-center">
+                <img src="@Model.UrlFotoAgente" class="rounded-circle mb-2 border" style="width:96px;height:96px;object-fit:cover;" alt="Foto del agente" />
+                <h5 class="mb-1">@Model.NombreAgente</h5>
+                <p class="small text-muted mb-1"><i class="bi bi-telephone"></i> @Model.TelefonoAgente</p>
+                <p class="small mb-0"><a href="mailto:@Model.EmailAgente">@Model.EmailAgente</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Copiar código
+        (function () {
+            var btn = document.getElementById("btnCopiarCodigo");
+            var codigo = document.getElementById("codigoPropiedad");
+            if (!btn || !codigo) return;
+            btn.addEventListener("click", function () {
+                var text = codigo.textContent.trim();
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(function () {
+                        btn.innerHTML = '<i class="bi bi-check2"></i> Copiado';
+                        setTimeout(function () { btn.innerHTML = '<i class="bi bi-clipboard"></i> Copiar'; }, 2000);
+                    });
+                } else {
+                    var ta = document.createElement("textarea");
+                    ta.value = text;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(ta);
+                    btn.innerHTML = '<i class="bi bi-check2"></i> Copiado';
+                    setTimeout(function () { btn.innerHTML = '<i class="bi bi-clipboard"></i> Copiar'; }, 2000);
+                }
+            });
+        })();
+
+        // Toggle Favorito
+        (function () {
+            var btn = document.getElementById("btnFavorito");
+            if (!btn) return;
+
+            var token = document.querySelector('input[name="__RequestVerificationToken"]');
+            var tokenVal = token ? token.value : "";
+
+            btn.addEventListener("click", function () {
+                var propiedadId = btn.dataset.propiedadId;
+                var esFavorita = btn.dataset.esFavorita === "true";
+                var icon = btn.querySelector(".fav-icon");
+                var label = btn.querySelector(".fav-label");
+
+                btn.disabled = true;
+                btn.classList.add("animando");
+
+                fetch("/Cliente/ToggleFavorita", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "RequestVerificationToken": tokenVal
+                    },
+                    body: "propiedadId=" + propiedadId + "&__RequestVerificationToken=" + encodeURIComponent(tokenVal)
+                })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    var ahora = data.esFavorita;
+                    btn.dataset.esFavorita = ahora ? "true" : "false";
+                    btn.classList.toggle("activo", ahora);
+                    icon.className = "bi " + (ahora ? "bi-heart-fill" : "bi-heart") + " fav-icon";
+                    label.textContent = ahora ? "En favoritos" : "Agregar a favoritos";
+                    btn.title = ahora ? "Quitar de favoritos" : "Agregar a favoritos";
+                })
+                .catch(function () {
+                    console.warn("Error al actualizar favorito.");
+                })
+                .finally(function () {
+                    btn.disabled = false;
+                    setTimeout(function () { btn.classList.remove("animando"); }, 450);
+                });
+            });
+        })();
+    </script>
+}

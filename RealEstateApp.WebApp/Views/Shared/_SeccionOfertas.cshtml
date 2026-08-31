@@ -1,0 +1,14 @@
+@model IEnumerable<RealEstateApp.WebApp.ViewModels.Shared.OfertaViewModel>
+
+<div class="timeline-oferta">
+    <h5>Ofertas</h5>
+    <table class="table">
+        <thead><tr><th>Fecha</th><th>Cifra</th><th>Estado</th></tr></thead>
+        <tbody>
+        @foreach (var o in Model)
+        {
+            <tr><td>@o.FechaOferta.ToString("g")</td><td>@o.CifraOfertada.ToString("N2")</td><td>@o.Estado</td></tr>
+        }
+        </tbody>
+    </table>
+</div>

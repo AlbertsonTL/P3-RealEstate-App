@@ -1,0 +1,96 @@
+@model RealEstateApp.WebApp.ViewModels.Publico.PropiedadDetalleViewModel
+
+<div class="card shadow-sm my-4">
+    <div class="card-header fw-semibold">Chat con el agente</div>
+    <div class="card-body">
+        <div class="chat-container p-3 mb-3" style="max-height: 280px; overflow-y: auto;">
+            @if (!Model.Mensajes.Any())
+            {
+                <p class="text-muted small mb-0">Aun no hay mensajes. Escriba el primero.</p>
+            }
+            else
+            {
+                @foreach (var m in Model.Mensajes)
+                {
+                    <div class="mb-2 @(m.EsMio ? "text-end" : "text-start")">
+                        <span class="d-inline-block px-3 py-2 rounded-3 @(m.EsMio ? "bg-primary text-white" : "chat-message-bg border")" style="max-width: 85%;">
+                            @m.Contenido
+                            <small class="d-block opacity-75 mt-1">@m.FechaEnvio.ToLocalTime().ToString("g")</small>
+                        </span>
+                    </div>
+                }
+            }
+        </div>
+        <form asp-controller="Cliente" asp-action="EnviarMensaje" method="post" class="row g-2 align-items-end">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="propiedadId" value="@Model.Id" />
+            <input type="hidden" name="agenteId" value="@Model.AgenteId" />
+            <div class="col-md-9">
+                <label class="form-label small text-muted">Nuevo mensaje</label>
+                <textarea name="contenido" class="form-control" rows="2" placeholder="Escriba su mensaje..." required></textarea>
+            </div>
+            <div class="col-md-3 d-grid">
+                <button type="submit" class="btn btn-outline-primary">Enviar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm my-4">
+    <div class="card-header fw-semibold">Mis ofertas en esta propiedad</div>
+    <div class="card-body">
+        @if (!Model.Ofertas.Any())
+        {
+            <p class="text-muted small mb-0">No ha realizado ofertas para este inmueble.</p>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-sm align-middle mb-0">
+                    <thead><tr><th>Fecha</th><th>Cifra</th><th>Estado</th></tr></thead>
+                    <tbody>
+                    @foreach (var o in Model.Ofertas)
+                    {
+                        <tr>
+                            <td>@o.FechaOferta.ToLocalTime().ToString("g")</td>
+                            <td>@o.CifraOfertada.ToString("N2")</td>
+                            <td><span class="badge text-bg-secondary">@o.Estado</span></td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        <hr class="my-4" />
+        <h6 class="mb-3">Nueva oferta</h6>
+        @if (!Model.PuedeHacerOferta)
+        {
+            <p class="text-muted small mb-2">
+                @if (Model.Estado == RealEstateApp.Core.Domain.Enumeraciones.EstadoPropiedad.Vendida)
+                {
+                    <span>Esta propiedad ya no esta disponible para nuevas ofertas.</span>
+                }
+                else
+                {
+                    <span>No puede enviar una nueva oferta mientras exista una oferta aceptada o una oferta pendiente suya para este inmueble.</span>
+                }
+            </p>
+        }
+        <form asp-controller="Cliente" asp-action="NuevaOferta" method="post" class="row g-2">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="PropiedadId" value="@Model.Id" />
+            <div class="col-md-6">
+                <label class="form-label small">Cifra ofertada (RD$)</label>
+                <input name="CifraOfertada" type="number" step="0.01" min="1" class="form-control @(Model.PuedeHacerOferta ? "" : "bg-light")" @(Model.PuedeHacerOferta ? "required" : "disabled") />
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+                <button type="submit"
+                        class="btn w-100 @(Model.PuedeHacerOferta ? "btn-primary" : "btn-secondary")"
+                        @(Model.PuedeHacerOferta ? "" : "disabled")>
+                    Nueva oferta
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

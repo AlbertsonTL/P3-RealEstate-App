@@ -1,0 +1,30 @@
+@model RealEstateApp.WebApp.ViewModels.Publico.HomeViewModel
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<section class="hero-home text-center mb-4">
+    <span class="hero-badge"><i class="bi bi-shield-check"></i>Propiedades verificadas</span>
+    <h1>Encuentra tu próxima propiedad</h1>
+    <p>Explora un catálogo curado de propiedades en República Dominicana, con agentes verificados y datos confiables en cada listado.</p>
+</section>
+
+<partial name="_PanelFiltros" model="Model.Filtros" />
+
+<section class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mt-1">
+    @if (!Model.Propiedades.Any())
+    {
+        <div class="col-12"><div class="alert alert-info">No se encontraron propiedades.</div></div>
+    }
+    else
+    {
+        @foreach (var propiedad in Model.Propiedades)
+        {
+            <div class="col">
+                <a asp-controller="Publico" asp-action="DetallePropiedad" asp-route-id="@propiedad.Id" class="text-decoration-none text-dark">
+                    <partial name="_TarjetaPropiedad" model="propiedad" />
+                </a>
+            </div>
+        }
+    }
+</section>

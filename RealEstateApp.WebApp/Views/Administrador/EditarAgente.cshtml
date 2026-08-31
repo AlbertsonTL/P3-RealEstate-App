@@ -1,0 +1,86 @@
+@model RealEstateApp.WebApp.ViewModels.Admin.EditarAdminViewModel
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Editar Agente";
+}
+
+<h2 class="mb-3">Editar Agente</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form asp-action="EditarAgente" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+            <input asp-for="Id" type="hidden" />
+            <div class="row g-3">
+                <div class="col-12 mb-2">
+                    <label class="form-label d-block">Foto de Perfil Actual</label>
+                    <div class="d-flex align-items-center gap-3">
+                        <img id="imgPreview" src="@(string.IsNullOrEmpty(Model.UrlFoto) ? "" : Model.UrlFoto)"
+                            alt="Foto Agente"
+                            class="rounded-circle border shadow-sm @(string.IsNullOrEmpty(Model.UrlFoto) ? "d-none" : "")"
+                            style="width:100px;height:100px;object-fit:cover;" />
+
+                        <div id="noPhotoIcon"
+                            class="rounded-circle bg-light d-flex align-items-center justify-content-center border @(!string.IsNullOrEmpty(Model.UrlFoto) ? "d-none" : "")"
+                            style="width:100px;height:100px;color:#999;">
+                            <i class="bi bi-person-fill fs-1"></i>
+                        </div>
+
+                        <div>
+                            <label for="inputFoto" class="btn btn-sm btn-outline-primary" id="labelFoto">Cambiar
+                                Foto</label>
+                            <input asp-for="Foto" id="inputFoto" class="form-control d-none"
+                                onchange="previewImage(this)" />
+                            <p class="text-muted small mt-1 mb-0">Solo formatos de imagen soportados (.jpg, .png)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6"><label asp-for="Nombre" class="form-label"></label><input asp-for="Nombre"
+                        class="form-control" /><span asp-validation-for="Nombre" class="text-danger small"></span></div>
+                <div class="col-md-6"><label asp-for="Apellido" class="form-label"></label><input asp-for="Apellido"
+                        class="form-control" /><span asp-validation-for="Apellido" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4"><label asp-for="Cedula" class="form-label"></label><input asp-for="Cedula"
+                        class="form-control" /><span asp-validation-for="Cedula" class="text-danger small"></span></div>
+                <div class="col-md-4"><label asp-for="Telefono" class="form-label"></label><input asp-for="Telefono"
+                        class="form-control" /><span asp-validation-for="Telefono" class="text-danger small"></span>
+                </div>
+                <div class="col-md-4"><label asp-for="NombreUsuario" class="form-label"></label><input
+                        asp-for="NombreUsuario" class="form-control" /><span asp-validation-for="NombreUsuario"
+                        class="text-danger small"></span></div>
+                <div class="col-md-6"><label asp-for="Correo" class="form-label"></label><input asp-for="Correo"
+                        class="form-control" /><span asp-validation-for="Correo" class="text-danger small"></span></div>
+                <div class="col-md-6">
+                    <label asp-for="Contrasena" class="form-label"></label>
+                    <input asp-for="Contrasena" class="form-control" placeholder="Opcional: solo si desea cambiarla" />
+                </div>
+            </div>
+            <div class="mt-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                <a asp-action="Agentes" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function previewImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const img = document.getElementById('imgPreview');
+                    const icon = document.getElementById('noPhotoIcon');
+                    const label = document.getElementById('labelFoto');
+
+                    img.src = e.target.result;
+                    img.classList.remove('d-none');
+                    icon.classList.add('d-none');
+                    label.innerText = 'Foto seleccionada';
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,48 @@
+@model RealEstateApp.WebApp.ViewModels.Agente.CrearPropiedadViewModel
+<h1>Crear propiedad</h1>
+
+<form asp-action="CrearPropiedad" method="post" enctype="multipart/form-data" class="row g-3">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="col-md-6">
+        <label asp-for="TipoPropiedadId" class="form-label">Tipo de propiedad</label>
+        <select asp-for="TipoPropiedadId" asp-items="Model.TiposPropiedad" class="form-select"></select>
+        <small class="text-muted">Seleccione si es casa, apartamento, terreno, etc.</small>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="TipoVentaId" class="form-label">Tipo de venta</label>
+        <select asp-for="TipoVentaId" asp-items="Model.TiposVenta" class="form-select"></select>
+        <small class="text-muted">Indique si es venta o alquiler.</small>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Precio" class="form-label">Precio</label>
+        <input asp-for="Precio" class="form-control" />
+        <small class="text-muted">Monto total de la propiedad.</small>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="TamañoMetros" class="form-label">Tamaño (m2)</label>
+        <input asp-for="TamañoMetros" class="form-control" />
+        <small class="text-muted">Area construida o total en metros cuadrados.</small>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="CantidadHabitaciones" class="form-label">Habitaciones</label>
+        <input asp-for="CantidadHabitaciones" class="form-control" />
+        <small class="text-muted">Cantidad de habitaciones disponibles.</small>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="CantidadBanos" class="form-label">Banos</label>
+        <input asp-for="CantidadBanos" class="form-control" />
+        <small class="text-muted">Cantidad de banos de la propiedad.</small>
+    </div>
+    <div class="col-12">
+        <label asp-for="Descripcion" class="form-label">Descripcion</label>
+        <textarea asp-for="Descripcion" class="form-control" rows="4"></textarea>
+        <small class="text-muted">Describa ubicacion, amenidades y detalles importantes.</small>
+    </div>
+    <div class="col-12">
+        <label asp-for="Imagenes" class="form-label">Imagenes</label>
+        <input asp-for="Imagenes" type="file" multiple class="form-control" />
+        <small class="text-muted">Suba una o varias imagenes de la propiedad.</small>
+    </div>
+    <div class="col-12"><button class="btn btn-primario">Guardar</button></div>
+</form>

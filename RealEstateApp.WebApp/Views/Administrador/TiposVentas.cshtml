@@ -1,0 +1,54 @@
+@model List<RealEstateApp.WebApp.ViewModels.Admin.TipoCatalogoConConteoViewModel>
+@{ Layout = "_LayoutAdmin"; ViewData["Title"] = "Tipos de Venta"; }
+
+<div class="admin-page-header d-flex align-items-start justify-content-between flex-wrap gap-2">
+    <div><h1>Tipos de Venta</h1><p class="page-sub">Catálogo de modalidades de venta disponibles</p></div>
+    <span class="badge text-bg-primary align-self-center fs-6 px-3 py-2">@Model.Count registros</span>
+</div>
+@if (TempData["Exito"] is string exito) { <div class="alert alert-success mb-3"><i class="bi bi-check-circle me-2"></i>@exito</div> }
+@if (TempData["Error"]  is string error) { <div class="alert alert-danger  mb-3"><i class="bi bi-x-circle me-2"></i>@error</div> }
+<div class="card mb-3">
+    <div class="card-header"><i class="bi bi-plus-circle me-2"></i>Nuevo tipo de venta</div>
+    <div class="card-body">
+        <form asp-action="CrearTipoVenta" method="post">
+            @Html.AntiForgeryToken()
+            <div class="row g-2 align-items-end">
+                <div class="col-md-4"><label class="form-label">Nombre</label><input class="form-control" name="Nombre" placeholder="Ej: Alquiler" required /></div>
+                <div class="col-md-6"><label class="form-label">Descripción</label><input class="form-control" name="Descripcion" placeholder="Descripción..." required /></div>
+                <div class="col-md-2 d-grid"><button type="submit" class="btn btn-primary"><i class="bi bi-plus me-1"></i>Crear</button></div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead><tr><th>Nombre</th><th>Descripción</th><th class="text-center">Propiedades</th><th class="text-end pe-4">Acciones</th></tr></thead>
+                <tbody>
+                @if (!Model.Any()) { <tr><td colspan="4"><div class="empty-state"><i class="bi bi-tags empty-icon"></i><p>Sin registros.</p></div></td></tr> }
+                else { @foreach (var t in Model) {
+                    <tr>
+                        <td style="font-weight:600;font-size:0.9rem;">@t.Nombre</td>
+                        <td style="color:var(--text-2);font-size:0.875rem;">@t.Descripcion</td>
+                        <td class="text-center">
+                            <span class="badge @(t.CantidadPropiedades > 0 ? "text-bg-primary" : "text-bg-secondary")">
+                                @t.CantidadPropiedades
+                            </span>
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="d-inline-flex gap-2">
+                                <a asp-action="EditarTipoVenta" asp-route-id="@t.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                                <form asp-action="EliminarTipoVenta" method="post" class="m-0" onsubmit="return confirm('¿Eliminar?');">
+                                    @Html.AntiForgeryToken()<input type="hidden" name="id" value="@t.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" @(t.CantidadPropiedades > 0 ? "disabled title=\"En uso por propiedades\"" : "")>Eliminar</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                } }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

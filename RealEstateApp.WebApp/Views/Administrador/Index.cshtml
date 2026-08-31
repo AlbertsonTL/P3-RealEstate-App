@@ -1,0 +1,154 @@
+@model RealEstateApp.WebApp.ViewModels.Admin.DashboardViewModel
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="admin-page-header d-flex align-items-start justify-content-between flex-wrap gap-3">
+    <div>
+        <h1>Dashboard</h1>
+        <p class="page-sub">Resumen general del sistema — @DateTime.Now.ToString("dddd, d MMMM yyyy")</p>
+    </div>
+    <a asp-controller="Inicio" asp-action="Index" target="_blank"
+       class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
+        <i class="bi bi-box-arrow-up-right"></i> Ver sitio
+    </a>
+</div>
+
+<!-- Stats Grid -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="d-flex align-items-start justify-content-between">
+                <div>
+                    <div class="stat-card-label">Propiedades</div>
+                    <div class="stat-card-value">@Model.PropiedadesDisponibles</div>
+                    <div class="stat-card-sub">disponibles · <span style="color:var(--red);">@Model.PropiedadesVendidas vendidas</span></div>
+                </div>
+                <div class="stat-card-icon" style="background:var(--accent-soft);color:var(--accent);">
+                    <i class="bi bi-houses-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="d-flex align-items-start justify-content-between">
+                <div>
+                    <div class="stat-card-label">Agentes</div>
+                    <div class="stat-card-value" style="color:var(--green);">@Model.AgentesActivos</div>
+                    <div class="stat-card-sub">activos · <span style="color:var(--text-3);">@Model.AgentesInactivos inactivos</span></div>
+                </div>
+                <div class="stat-card-icon" style="background:var(--green-soft);color:var(--green);">
+                    <i class="bi bi-person-badge-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="d-flex align-items-start justify-content-between">
+                <div>
+                    <div class="stat-card-label">Clientes</div>
+                    <div class="stat-card-value" style="color:var(--blue);">@Model.ClientesActivos</div>
+                    <div class="stat-card-sub">activos · <span style="color:var(--text-3);">@Model.ClientesInactivos inactivos</span></div>
+                </div>
+                <div class="stat-card-icon" style="background:var(--blue-soft);color:var(--blue);">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="d-flex align-items-start justify-content-between">
+                <div>
+                    <div class="stat-card-label">Desarrolladores</div>
+                    <div class="stat-card-value" style="color:var(--amber);">@Model.DesarrolladoresActivos</div>
+                    <div class="stat-card-sub">activos · <span style="color:var(--text-3);">@Model.DesarrolladoresInactivos inactivos</span></div>
+                </div>
+                <div class="stat-card-icon" style="background:var(--amber-soft);color:var(--amber);">
+                    <i class="bi bi-code-slash"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center gap-2">
+                <i class="bi bi-lightning-charge-fill" style="color:var(--accent);"></i>
+                Acciones rápidas
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    @{
+                        var actions = new[] {
+                            new { Icon="bi-person-badge", Label="Gestionar Agentes",    Ctrl="Administrador", Act="Agentes",          Color="var(--accent-soft)",  IconColor="var(--accent)" },
+                            new { Icon="bi-person", Label="Administradores",     Ctrl="Administrador", Act="Administradores",   Color="var(--green-soft)",   IconColor="var(--green)" },
+                            new { Icon="bi-house-gear",   Label="Tipos de Propiedad",   Ctrl="Administrador", Act="TiposPropiedades",  Color="var(--amber-soft)",   IconColor="var(--amber)" },
+                            new { Icon="bi-tags",         Label="Tipos de Venta",       Ctrl="Administrador", Act="TiposVentas",       Color="var(--blue-soft)",    IconColor="var(--blue)" },
+                            new { Icon="bi-stars",        Label="Mejoras",              Ctrl="Administrador", Act="Mejoras",           Color="var(--red-soft)",     IconColor="var(--red)" },
+                            new { Icon="bi-code-slash",   Label="Desarrolladores",      Ctrl="Administrador", Act="Desarrolladores",   Color="var(--surface-3)",    IconColor="var(--text-2)" },
+                        };
+                    }
+                    @foreach (var a in actions)
+                    {
+                        <div class="col-sm-6 col-md-4">
+                            <a asp-controller="@a.Ctrl" asp-action="@a.Act"
+                               class="d-flex align-items-center gap-3 p-3 rounded-3 text-decoration-none"
+                               style="background:@a.Color; border:1px solid var(--border); transition: transform 0.18s, box-shadow 0.18s;"
+                               onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='var(--shadow-md)';"
+                               onmouseout="this.style.transform='';this.style.boxShadow='';">
+                                <div style="width:38px;height:38px;border-radius:10px;background:var(--surface);display:flex;align-items:center;justify-content:center;">
+                                    <i class="bi @a.Icon" style="color:@a.IconColor;font-size:1rem;"></i>
+                                </div>
+                                <span style="font-weight:600;font-size:0.85rem;color:var(--text-1);">@a.Label</span>
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center gap-2">
+                <i class="bi bi-bar-chart-fill" style="color:var(--accent);"></i>
+                Totales del sistema
+            </div>
+            <div class="card-body p-0">
+                @{
+                    var total = Model.AgentesActivos + Model.AgentesInactivos + Model.ClientesActivos +
+                                Model.ClientesInactivos + Model.DesarrolladoresActivos + Model.DesarrolladoresInactivos;
+                    var totalProp = Model.PropiedadesDisponibles + Model.PropiedadesVendidas;
+                }
+                <ul class="list-unstyled mb-0">
+                    @{
+                        var rows = new[] {
+                            new { Label="Total propiedades",  Val=totalProp.ToString(),  Color="var(--accent)" },
+                            new { Label="Total usuarios",     Val=total.ToString(),       Color="var(--blue)"   },
+                            new { Label="Tasa de venta",
+                                  Val=(totalProp > 0 ? $"{(Model.PropiedadesVendidas * 100 / totalProp)}%" : "0%"),
+                                  Color="var(--green)" },
+                            new { Label="Agentes/Propiedades",
+                                  Val=(Model.AgentesActivos > 0 ? $"{(totalProp / Math.Max(Model.AgentesActivos,1)):0.0}/ag." : "—"),
+                                  Color="var(--amber)" },
+                        };
+                    }
+                    @for(int i=0; i<rows.Length; i++) {
+                        var r = rows[i];
+                        <li class="d-flex justify-content-between align-items-center px-4 py-3 @(i < rows.Length-1 ? "border-bottom" : "")"
+                            style="border-color:var(--border) !important;">
+                            <span style="font-size:0.85rem;color:var(--text-2);">@r.Label</span>
+                            <span style="font-family:'Outfit',sans-serif;font-weight:700;font-size:1rem;color:@r.Color;">@r.Val</span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

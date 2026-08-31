@@ -1,0 +1,11 @@
+@model IEnumerable<RealEstateApp.WebApp.ViewModels.Shared.ChatMensajeViewModel>
+
+<div class="chat-container">
+    @foreach (var m in Model)
+    {
+        <div class="@(m.EsMio ? "chat-burbuja-mia" : "chat-burbuja-otro")">
+            <div>@m.Contenido</div>
+            <small>@m.FechaEnvio.ToString("g")</small>
+        </div>
+    }
+</div>

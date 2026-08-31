@@ -1,0 +1,96 @@
+@model IEnumerable<RealEstateApp.WebApp.ViewModels.Publico.PropiedadResumenViewModel>
+@{
+    var lista = Model.ToList();
+}
+
+@if (TempData["Exito"] is string exito) { <div class="alert alert-success mb-3"><i class="bi bi-check-circle me-2"></i>@exito</div> }
+@if (TempData["Error"]  is string error) { <div class="alert alert-danger  mb-3"><i class="bi bi-x-circle me-2"></i>@error</div> }
+
+<div class="agent-header">
+    <div>
+        <h1 style="font-size:1.4rem;margin:0 0 0.2rem;">Mis Propiedades</h1>
+        <p style="font-size:0.85rem;color:var(--text-3);margin:0;">
+            @lista.Count propiedad@(lista.Count != 1 ? "es" : "") publicada@(lista.Count != 1 ? "s" : "")
+        </p>
+    </div>
+    <a asp-action="CrearPropiedad" class="btn btn-primary d-flex align-items-center gap-2">
+        <i class="bi bi-plus-lg"></i> Nueva propiedad
+    </a>
+</div>
+
+@if (!lista.Any())
+{
+    <div class="card">
+        <div class="card-body">
+            <div class="empty-state">
+                <i class="bi bi-houses empty-icon"></i>
+                <p style="font-size:1rem;font-weight:600;color:var(--text-2);margin-bottom:0.5rem;">Sin propiedades aún</p>
+                <p>Publica tu primera propiedad para empezar a recibir ofertas y mensajes.</p>
+                <a asp-action="CrearPropiedad" class="btn btn-primary mt-2">
+                    <i class="bi bi-plus-lg me-1"></i>Crear propiedad
+                </a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Propiedad</th>
+                            <th>Tipo</th>
+                            <th>Precio</th>
+                            <th>Estado</th>
+                            <th class="text-end pe-4">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var p in lista)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div style="width:48px;height:40px;border-radius:var(--radius-sm);overflow:hidden;flex-shrink:0;background:var(--surface-3);">
+                                        <img src="@p.UrlImagenPrincipal" alt="" style="width:100%;height:100%;object-fit:cover;" />
+                                    </div>
+                                    <div>
+                                        <div style="font-weight:600;font-size:0.875rem;">@p.TipoPropiedad</div>
+                                        <code style="font-size:0.75rem;color:var(--text-3);">@p.Codigo</code>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="color:var(--text-2);font-size:0.875rem;">@p.TipoVenta</td>
+                            <td style="font-family:'Outfit',sans-serif;font-weight:700;font-size:0.95rem;">RD$ @p.Precio.ToString("N0")</td>
+                            <td>
+                                @if (p.Estado == RealEstateApp.Core.Domain.Enumeraciones.EstadoPropiedad.Vendida) {
+                                    <span class="badge text-bg-danger">Vendida</span>
+                                } else {
+                                    <span class="badge text-bg-success">Disponible</span>
+                                }
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="d-inline-flex flex-wrap gap-1">
+                                    <a asp-controller="Publico" asp-action="DetallePropiedad" asp-route-id="@p.Id"
+                                       class="btn btn-sm btn-outline-secondary" title="Ver"><i class="bi bi-eye"></i></a>
+                                    <a asp-action="EditarPropiedad" asp-route-id="@p.Id"
+                                       class="btn btn-sm btn-outline-primary" title="Editar"><i class="bi bi-pencil"></i></a>
+                                    <a asp-action="ChatClientes" asp-route-propiedadId="@p.Id"
+                                       class="btn btn-sm btn-outline-info" title="Chats"><i class="bi bi-chat-dots"></i></a>
+                                    <a asp-action="OfertasClientes" asp-route-propiedadId="@p.Id"
+                                       class="btn btn-sm btn-outline-success" title="Ofertas"><i class="bi bi-currency-dollar"></i></a>
+                                    <a asp-action="EliminarPropiedad" asp-route-id="@p.Id"
+                                       class="btn btn-sm btn-outline-danger" title="Eliminar"><i class="bi bi-trash"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

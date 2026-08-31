@@ -1,0 +1,68 @@
+@model RealEstateApp.WebApp.ViewModels.Agente.ChatConClienteViewModel
+@{
+    ViewData["Title"] = "Chat con cliente";
+}
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a asp-action="ChatClientes" asp-route-propiedadId="@Model.PropiedadId" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+    <div>
+        <h1 style="font-size:1.4rem;margin:0;">Chat con cliente</h1>
+        <p style="font-size:0.85rem;color:var(--text-3);margin:0;">Conversación directa</p>
+    </div>
+</div>
+
+@if (TempData["Error"] is string error) { <div class="alert alert-danger mb-3">@error</div> }
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex align-items-center gap-2">
+                <i class="bi bi-chat-dots-fill" style="color:var(--accent);"></i>
+                Conversación
+            </div>
+            <div class="card-body">
+                <div style="max-height:420px;overflow-y:auto;padding-right:0.25rem;" class="mb-3" id="chatArea">
+                    @if (!Model.Mensajes.Any())
+                    {
+                        <div class="empty-state" style="padding:2rem 1rem;">
+                            <i class="bi bi-chat-square empty-icon"></i>
+                            <p>Sin mensajes aún.</p>
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var m in Model.Mensajes)
+                        {
+                            <div class="@(m.EsMio ? "chat-burbuja-mia" : "chat-burbuja-otro")">
+                                <div class="chat-bubble">
+                                    <div>@m.Contenido</div>
+                                    <small style="font-size:0.7rem;opacity:0.65;display:block;margin-top:0.2rem;">@m.FechaEnvio.ToLocalTime().ToString("g")</small>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+                <form asp-action="ResponderChat" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="propiedadId" value="@Model.PropiedadId" />
+                    <input type="hidden" name="clienteId" value="@Model.ClienteId" />
+                    <div class="d-flex gap-2">
+                        <input name="contenido" class="form-control" placeholder="Escribe tu respuesta..." required />
+                        <button type="submit" class="btn btn-primary d-flex align-items-center gap-2">
+                            <i class="bi bi-send"></i><span class="d-none d-sm-inline">Enviar</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var ca = document.getElementById('chatArea');
+        if (ca) ca.scrollTop = ca.scrollHeight;
+    </script>
+}

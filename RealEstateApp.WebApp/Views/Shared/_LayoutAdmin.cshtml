@@ -1,0 +1,205 @@
+@inject Microsoft.AspNetCore.Identity.UserManager<RealEstateApp.Infrastructure.Identity.Entidades.UsuarioAplicacion> UserManager
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin RealEstate</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <script>
+            (function () {
+                var t = localStorage.getItem('re-theme') || 'dark';
+                document.documentElement.setAttribute('data-theme', t);
+            })();
+    </script>
+</head>
+
+<body>
+    <!-- ═══ HEADER ═══ -->
+    <header id="header" class="admin-header fixed-top d-flex align-items-center">
+        <div class="d-flex align-items-center justify-content-between">
+            <a href="#" class="admin-logo d-flex align-items-center">
+                <img src="~/logo.png" alt="RealEstateApp Logo" class="logo-icon" />
+                <span class="d-lg-block">RealEstate</span>
+            </a>
+            <i class="bi bi-list toggle-sidebar-btn" id="sidebarToggleBtn"></i>
+        </div>
+
+        <nav class="admin-header-nav ms-auto d-flex align-items-center gap-3 pe-3">
+            <button class="btn-theme-toggle" id="themeToggleAdmin" aria-label="Cambiar tema" title="Cambiar tema">
+                <i class="bi bi-sun-fill icon-sun"></i>
+                <i class="bi bi-moon-fill icon-moon"></i>
+            </button>
+            <form asp-controller="Cuenta" asp-action="CerrarSesion" method="post" class="d-inline">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-logout" title="Cerrar sesión">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span class="d-none d-lg-inline">Cerrar sesión</span>
+                </button>
+            </form>
+        </nav>
+    </header>
+
+    <!-- ═══ SIDEBAR ═══ -->
+    <aside class="admin-sidebar" id="adminSidebar">
+		<div class="sidebar-brand">
+            <a asp-controller="Administrador" asp-action="MiPerfil"
+                class="sidebar-user-role d-flex align-items-center text-decoration-none h4" title="Mi Perfil">
+                @{
+                    var currentUser = await UserManager.GetUserAsync(User);
+                    var userPhotoUrl = currentUser?.UrlFoto;
+                    var hasValidPhoto = !string.IsNullOrEmpty(userPhotoUrl);
+                }
+                <div class="sidebar-brand-icon m-2">
+                    @if (hasValidPhoto)
+                    {
+                        <img src="@userPhotoUrl" alt="Foto de perfil" class="user-avatar-img"
+                            onerror="this.style.display='none'; this.parentElement.querySelector('.user-avatar-fallback').style.display='flex';" />
+                        <i class="bi bi-person-circle user-avatar-fallback"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-person-circle"></i>
+                    }
+                </div>
+                <div>
+                    <span class="sidebar-user-name">
+                        @(!string.IsNullOrEmpty(currentUser?.Nombre) ? currentUser.Nombre : "Administrador")
+                    </span>
+                    <small class="badge text-bg-primary">Administrador</small>
+                </div>
+            </a>
+        </div>
+
+        <ul class="sidebar-nav" id="sidebar-nav">
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Index" && ViewContext.RouteData.Values["controller"]?.ToString() == "Administrador" ? "" : "collapsed")"
+                    asp-controller="Administrador" asp-action="Index">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <li class="nav-heading">General</li>
+
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Agentes" ? "" : "collapsed")"
+                    asp-controller="Administrador" asp-action="Agentes">
+                    <i class="bi bi-person-badge-fill"></i>
+                    <span>Agentes</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Administradores" ? "" : "collapsed")"
+                    asp-controller="Administrador" asp-action="Administradores">
+                    <i class="bi bi-person-fill"></i>
+                    <span>Administradores</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Desarrolladores" ? "" : "collapsed")"
+                    asp-controller="Administrador" asp-action="Desarrolladores">
+                    <i class="bi bi-code-slash"></i>
+                    <span>Desarrolladores</span>
+                </a>
+            </li>
+
+            <li class="nav-heading">Catálogos</li>
+
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "TiposPropiedades" ? "" : "collapsed")"
+                    asp-controller="Administrador" asp-action="TiposPropiedades">
+                    <i class="bi bi-house-gear-fill"></i>
+                    <span>Tipos Propiedad</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "TiposVentas" ? "" : "collapsed")"
+                    asp-controller="Administrador" asp-action="TiposVentas">
+                    <i class="bi bi-tags-fill"></i>
+                    <span>Tipos Venta</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Mejoras" ? "" : "collapsed")"
+                    asp-controller="Administrador" asp-action="Mejoras">
+                    <i class="bi bi-stars"></i>
+                    <span>Mejoras</span>
+                </a>
+            </li>
+            <li class="nav-heading">Otros</li>
+            <li class="nav-item">
+                <a class="nav-link" asp-controller="Inicio" asp-action="Index" target="_blank" title="Ver sitio">
+                    <i class="bi bi-box-arrow-up-right"></i>
+                    <span class="d-none d-lg-inline">Ver sitio</span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "MiPerfil" && ViewContext.RouteData.Values["controller"]?.ToString() == "Administrador" ? "" : "collapsed")"
+                    asp-controller="Administrador" asp-action="MiPerfil" title="Mi Perfil">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>Mi perfil</span>
+                </a>
+            </li>
+
+        </ul>
+    </aside>
+
+    <!-- ═══ MAIN CONTENT ═══ -->
+    <main id="main" class="main">
+        <section class="section">
+            @RenderBody()
+        </section>
+    </main>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer id="footer" class="footer">
+        <div class="footer-content">
+            <p class="copyright">
+                &copy; @DateTime.Now.Year <strong>RealEstateApp</strong> - Todos los derechos reservados.
+            </p>
+        </div>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Sidebar toggle functionality (NiceAdmin style)
+    document.addEventListener('DOMContentLoaded', function () {
+    const toggleBtn = document.querySelector('.toggle-sidebar-btn');
+    const body = document.body;
+    const sidebar = document.getElementById('adminSidebar');
+
+    toggleBtn.addEventListener('click', function () {
+    body.classList.toggle('toggle-sidebar');
+    });
+
+    // Theme toggle
+    const themeToggleAdmin = document.getElementById('themeToggleAdmin');
+    if (themeToggleAdmin) {
+    themeToggleAdmin.addEventListener('click', function () {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('re-theme', newTheme);
+    });
+    }
+    });
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>

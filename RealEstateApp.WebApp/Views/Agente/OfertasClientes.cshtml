@@ -1,0 +1,65 @@
+@model RealEstateApp.WebApp.ViewModels.Agente.OfertasClientesViewModel
+@{
+    ViewData["Title"] = "Ofertas de clientes";
+}
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a asp-action="Mantenimiento" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i></a>
+    <div>
+        <h1 style="font-size:1.4rem;margin:0;">Ofertas de clientes</h1>
+        <p style="font-size:0.85rem;color:var(--text-3);margin:0;">Clientes con ofertas en esta propiedad</p>
+    </div>
+</div>
+
+@if (!Model.Clientes.Any())
+{
+    <div class="card"><div class="card-body">
+        <div class="empty-state">
+            <i class="bi bi-currency-dollar empty-icon"></i>
+            <p>No hay ofertas para esta propiedad aún.</p>
+        </div>
+    </div></div>
+}
+else
+{
+    <div class="card">
+        <div class="card-body p-0">
+            <ul class="list-unstyled mb-0">
+            @{int idx = 0;}
+            @foreach (var cliente in Model.Clientes)
+            {
+                <li class="d-flex align-items-center justify-content-between px-4 py-3 @(idx++ < Model.Clientes.Count() - 1 ? "border-bottom" : "")"
+                    style="border-color:var(--border) !important;">
+
+                    @* Avatar + info *@
+                    <div class="d-flex align-items-center gap-3">
+                        @if (!string.IsNullOrEmpty(cliente.UrlFoto))
+                        {
+                            <img src="@cliente.UrlFoto"
+                                 alt="Foto de @cliente.NombreCompleto"
+                                 style="width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--border);" />
+                        }
+                        else
+                        {
+                            <div style="width:44px;height:44px;border-radius:50%;background:var(--green-soft);display:flex;align-items:center;justify-content:center;color:var(--green);font-size:1.2rem;flex-shrink:0;">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                        }
+                        <div>
+                            <div style="font-weight:600;font-size:0.92rem;line-height:1.2;">@cliente.NombreCompleto</div>
+                            <div style="font-size:0.8rem;color:var(--text-3);margin-top:1px;">@cliente.NombreUsuario</div>
+                        </div>
+                    </div>
+
+                    <a asp-action="OfertasDeCliente"
+                       asp-route-propiedadId="@Model.PropiedadId"
+                       asp-route-clienteId="@cliente.Id"
+                       class="btn btn-sm btn-outline-success d-flex align-items-center gap-2">
+                        <i class="bi bi-cash-stack"></i> Ver ofertas
+                    </a>
+                </li>
+            }
+            </ul>
+        </div>
+    </div>
+}

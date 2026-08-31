@@ -1,0 +1,16 @@
+@model RealEstateApp.WebApp.ViewModels.Publico.PropiedadDetalleViewModel
+
+<div class="card shadow-sm border-primary mt-4 mb-4">
+    <div class="card-header bg-primary text-white fw-semibold">Gestion (usted es el agente de esta propiedad)</div>
+    <div class="card-body d-flex flex-wrap gap-2">
+        <a asp-controller="Agente" asp-action="ChatClientes" asp-route-propiedadId="@Model.Id" class="btn btn-outline-primary">
+            <i class="bi bi-chat-dots"></i> Chats con clientes
+        </a>
+        <a asp-controller="Agente" asp-action="OfertasClientes" asp-route-propiedadId="@Model.Id" class="btn btn-outline-success">
+            <i class="bi bi-currency-dollar"></i> Ofertas de clientes
+        </a>
+        <a asp-controller="Agente" asp-action="Mantenimiento" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Volver a mantenimiento
+        </a>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+@model IEnumerable<(string Id, string Nombre, string UrlFoto)>
+@{
+    ViewData["Title"] = "Agentes";
+}
+
+<h1 class="mb-3">Nuestros Agentes</h1>
+<form method="get" class="mb-3">
+    <input name="busqueda" value="@ViewBag.Busqueda" class="form-control" placeholder="Buscar por nombre" />
+</form>
+<div class="row row-cols-1 row-cols-md-4 g-3">
+@foreach (var agente in Model)
+{
+    <div class="col">
+        <div class="card p-3 text-center">
+            <img src="@agente.UrlFoto" class="rounded-circle mx-auto mb-2" style="width:90px;height:90px;object-fit:cover;" />
+            <h6>@agente.Nombre</h6>
+            <a asp-action="Propiedades" asp-route-agenteId="@agente.Id" class="btn btn-primario btn-sm mt-2">Ver propiedades</a>
+        </div>
+    </div>
+}
+</div>

@@ -1,0 +1,26 @@
+@model RealEstateApp.WebApp.ViewModels.Publico.PropiedadResumenViewModel
+
+<a asp-controller="Publico" asp-action="DetallePropiedad" asp-route-id="@Model.Id"
+       class="tarjeta-propiedad text-decoration-none d-block">
+    <div class="tarjeta-imagen">
+        <img src="@Model.UrlImagenPrincipal" alt="@Model.TipoPropiedad" loading="lazy" />
+        <span class="badge-tipo">@Model.TipoPropiedad</span>
+        @if (Model.Estado == RealEstateApp.Core.Domain.Enumeraciones.EstadoPropiedad.Vendida)
+        {
+            <span class="badge badge-estado vendida position-absolute top-0 end-0 m-2">Vendida</span>
+        }
+    </div>
+    <div class="tarjeta-body">
+        <div class="d-flex justify-content-between align-items-center mb-1">
+            <span
+            style="font-size:0.78rem;color:var(--text-3);font-weight:600;letter-spacing:0.03em;text-transform:uppercase;">@Model.TipoVenta</span>
+            <code style="font-size:0.72rem;color:var(--text-3);">@Model.Codigo</code>
+        </div>
+        <div class="tarjeta-precio">RD$ @Model.Precio.ToString("N0")</div>
+        <div class="tarjeta-meta">
+            <span><i class="bi bi-door-open"></i> @Model.CantidadHabitaciones Hab.</span>
+            <span><i class="bi bi-droplet"></i> @Model.CantidadBanos Baños</span>
+            <span><i class="bi bi-rulers"></i> @Model.TamañoMetros m²</span>
+        </div>
+    </div>
+</a>

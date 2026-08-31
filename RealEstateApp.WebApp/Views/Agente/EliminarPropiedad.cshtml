@@ -1,0 +1,18 @@
+@model RealEstateApp.WebApp.ViewModels.Agente.EliminarPropiedadViewModel
+
+<div class="card p-4">
+    <h3>Confirmar eliminacion</h3>
+    <p class="mb-1"><strong>Codigo:</strong> @Model.Codigo</p>
+    <p class="mb-1"><strong>Tipo de propiedad:</strong> @Model.TipoPropiedad</p>
+    <p class="mb-1"><strong>Tipo de venta:</strong> @Model.TipoVenta</p>
+    <p class="mb-1"><strong>Precio:</strong> @Model.Precio.ToString("N2")</p>
+    <p class="mb-3"><strong>Descripcion:</strong> @Model.Descripcion</p>
+    <p class="text-danger fw-semibold">¿Está seguro que desea eliminar esta propiedad?</p>
+
+    <form asp-action="ConfirmarEliminar" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.Id" />
+        <a asp-action="Mantenimiento" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+    </form>
+</div>

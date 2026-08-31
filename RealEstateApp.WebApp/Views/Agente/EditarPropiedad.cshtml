@@ -1,0 +1,114 @@
+@model RealEstateApp.WebApp.ViewModels.Agente.EditarPropiedadViewModel
+
+<h1>Editar propiedad</h1>
+
+<form asp-action="EditarPropiedad" method="post" enctype="multipart/form-data" class="row g-3">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+
+    <div class="col-md-6">
+        <label asp-for="TipoPropiedadId" class="form-label">Tipo de propiedad</label>
+        <select asp-for="TipoPropiedadId" asp-items="Model.TiposPropiedad" class="form-select"></select>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="TipoVentaId" class="form-label">Tipo de venta</label>
+        <select asp-for="TipoVentaId" asp-items="Model.TiposVenta" class="form-select"></select>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Precio" class="form-label">Precio</label>
+        <input asp-for="Precio" class="form-control" />
+    </div>
+    <div class="col-md-4">
+        <label asp-for="TamañoMetros" class="form-label">Tamaño (m2)</label>
+        <input asp-for="TamañoMetros" class="form-control" />
+    </div>
+    <div class="col-md-4">
+        <label asp-for="CantidadHabitaciones" class="form-label">Habitaciones</label>
+        <input asp-for="CantidadHabitaciones" class="form-control" />
+    </div>
+    <div class="col-md-4">
+        <label asp-for="CantidadBanos" class="form-label">Banos</label>
+        <input asp-for="CantidadBanos" class="form-control" />
+    </div>
+    <div class="col-12">
+        <label asp-for="Descripcion" class="form-label">Descripcion</label>
+        <textarea asp-for="Descripcion" class="form-control" rows="4"></textarea>
+    </div>
+    <div class="col-12">
+        <label class="form-label">Mejoras</label>
+        <div class="d-flex flex-wrap gap-3">
+            @foreach (var mejora in Model.MejorasDisponibles)
+            {
+                var mejoraId = int.Parse(mejora.Value);
+                <div class="form-check">
+                    <input class="form-check-input"
+                           type="checkbox"
+                           name="MejorasSeleccionadas"
+                           value="@mejora.Value"
+                           id="mejora_@mejora.Value"
+                           @(Model.MejorasSeleccionadas.Contains(mejoraId) ? "checked" : null) />
+                    <label class="form-check-label" for="mejora_@mejora.Value">@mejora.Text</label>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-12">
+        <label class="form-label">Imagenes actuales</label>
+        <p class="text-muted small mb-2">Maximo 4 imagenes en total. Marque las que desea quitar.</p>
+        @if (!Model.ImagenesExistentes.Any())
+        {
+            <p class="text-muted mb-0">No hay imagenes registradas.</p>
+        }
+        else
+        {
+            <div class="d-flex flex-wrap gap-3">
+                @for (var i = 0; i < Model.ImagenesExistentes.Count; i++)
+                {
+                    <div class="border rounded p-2" style="width: 160px;">
+                        <input type="hidden" asp-for="ImagenesExistentes[i].Id" />
+                        <input type="hidden" asp-for="ImagenesExistentes[i].Url" />
+                        <img src="@Model.ImagenesExistentes[i].Url" alt="" style="width: 100%; height: 100px; object-fit: cover;" class="rounded mb-2" />
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="EliminarImagenIds" value="@Model.ImagenesExistentes[i].Id" id="del_img_@Model.ImagenesExistentes[i].Id" />
+                            <label class="form-check-label" for="del_img_@Model.ImagenesExistentes[i].Id">Eliminar</label>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+    <div class="col-12">
+        <label asp-for="Imagenes" class="form-label">Agregar imagenes (opcional)</label>
+        <input asp-for="Imagenes" type="file" multiple class="form-control" accept="image/jpeg,image/png,image/webp" id="inputNuevasImagenes" />
+        <small class="text-muted">Solo se guardaran las que quepan hasta el limite de 4 en total.</small>
+        <div id="previewNuevasImagenes" class="d-flex flex-wrap gap-2 mt-2"></div>
+    </div>
+    <div class="col-12">
+        <button type="submit" class="btn btn-primario">Actualizar</button>
+        <a asp-action="Mantenimiento" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+<script>
+    (function () {
+        var input = document.getElementById('inputNuevasImagenes');
+        var preview = document.getElementById('previewNuevasImagenes');
+        if (!input || !preview) return;
+        input.addEventListener('change', function () {
+            preview.innerHTML = '';
+            var files = Array.prototype.slice.call(this.files || [], 0, 4);
+            files.forEach(function (f) {
+                var url = URL.createObjectURL(f);
+                var img = document.createElement('img');
+                img.src = url;
+                img.alt = '';
+                img.style.width = '100px';
+                img.style.height = '80px';
+                img.style.objectFit = 'cover';
+                img.className = 'rounded border';
+                preview.appendChild(img);
+            });
+        });
+    })();
+</script>

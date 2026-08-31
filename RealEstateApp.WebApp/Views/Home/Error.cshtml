@@ -1,0 +1,8 @@
+@model RealEstateApp.WebApp.Models.ErrorViewModel
+<div class="alert alert-danger mt-4">
+    Ocurrio un error inesperado.
+    @if (Model.ShowRequestId)
+    {
+        <div>RequestId: @Model.RequestId</div>
+    }
+</div>

@@ -1,0 +1,266 @@
+@model RealEstateApp.WebApp.ViewModels.Cuenta.RegistroViewModel
+@{
+    ViewData["Title"] = "Crear cuenta";
+    Layout = "_Layout";
+}
+
+<style>
+    .auth-page {
+        min-height: calc(100vh - 72px);
+        display: flex; align-items: center; justify-content: center;
+        padding: 3rem 1rem;
+        background: linear-gradient(135deg, var(--bg) 0%, var(--surface-2) 100%);
+    }
+    .auth-container { width: 100%; max-width: 640px; }
+    .auth-logo { text-align: center; margin-bottom: 2rem; }
+    .auth-logo-icon {
+        width: 64px; height: 64px;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; color: #fff; margin-bottom: .75rem;
+    }
+    .auth-logo-icon img {
+        width: 100%; height: 100%; object-fit: contain; display: block;
+    }
+    .auth-logo h1 {
+        font-size: 1.5rem; font-weight: 700; color: var(--text-1);
+        margin: 0; letter-spacing: -.02em;
+    }
+    .auth-logo p { color: var(--text-3); font-size: .875rem; margin: .25rem 0 0; }
+    .auth-card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: var(--radius-xl);
+        padding: 2rem 2rem 1.75rem; box-shadow: var(--shadow-lg);
+    }
+    .section-title {
+        font-size: .6875rem; font-weight: 700; letter-spacing: .08em;
+        text-transform: uppercase; color: var(--text-3);
+        margin: 0 0 .875rem; padding-bottom: .5rem;
+        border-bottom: 1px solid var(--border);
+    }
+    .auth-card .form-label {
+        font-size: .8125rem; font-weight: 600; color: var(--text-2);
+        margin-bottom: .375rem; letter-spacing: .01em;
+    }
+    .auth-card .form-control,
+    .auth-card .form-select {
+        background: var(--surface-2); border: 1.5px solid var(--border-strong);
+        border-radius: var(--radius-sm); color: var(--text-1);
+        font-size: .9375rem; height: 46px;
+        transition: border-color .2s, box-shadow .2s, background .2s;
+    }
+    .auth-card .form-control:focus,
+    .auth-card .form-select:focus {
+        background: var(--surface); border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(41,83,224,.12); outline: none;
+    }
+    .auth-card .form-control[type="file"] { height: auto; padding: .5rem .75rem; }
+    .input-wrap { position: relative; }
+    .input-wrap .form-control { padding-right: 2.75rem; }
+    .btn-eye {
+        position: absolute; right: .75rem; top: 50%; transform: translateY(-50%);
+        background: none; border: none; padding: 0; color: var(--text-3);
+        cursor: pointer; font-size: 1rem; line-height: 1;
+        display: flex; align-items: center; transition: color .15s; z-index: 5;
+    }
+    .btn-eye:hover { color: var(--accent); }
+    .btn-auth-primary {
+        width: 100%; height: 48px; background: var(--accent); color: #fff;
+        border: none; border-radius: var(--radius-sm);
+        font-size: .9375rem; font-weight: 600; letter-spacing: .01em;
+        cursor: pointer; transition: background .2s, transform .1s, box-shadow .2s;
+        box-shadow: 0 4px 14px rgba(41,83,224,.28);
+        display: flex; align-items: center; justify-content: center; gap: .5rem;
+    }
+    .btn-auth-primary:hover { background: var(--accent-h); box-shadow: 0 6px 18px rgba(41,83,224,.38); }
+    .btn-auth-primary:active { transform: scale(.98); }
+    .auth-footer {
+        text-align: center; margin-top: 1.5rem;
+        font-size: .875rem; color: var(--text-3);
+    }
+    .auth-footer a { color: var(--accent); font-weight: 600; text-decoration: none; }
+    .auth-footer a:hover { text-decoration: underline; }
+    .alert-auth {
+        background: var(--red-soft); border: 1px solid rgba(220,38,38,.2);
+        border-radius: var(--radius-sm); color: var(--red-text);
+        padding: .75rem 1rem; font-size: .875rem;
+        display: flex; align-items: flex-start; gap: .5rem; margin-bottom: 1.25rem;
+    }
+    .alert-auth i { margin-top: 1px; flex-shrink: 0; }
+    .text-danger { font-size: .75rem; margin-top: .25rem; display: block; }
+    .role-selector { display: flex; gap: .75rem; }
+    .role-btn {
+        flex: 1; height: 56px; border: 1.5px solid var(--border-strong);
+        border-radius: var(--radius-sm); background: var(--surface-2);
+        color: var(--text-2); font-size: .875rem; font-weight: 600;
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        gap: .5rem; transition: all .2s;
+    }
+    .role-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+    .role-btn.active { border-color: var(--accent); background: var(--accent-soft); color: var(--accent); box-shadow: 0 0 0 3px rgba(41,83,224,.12); }
+    .role-btn i { font-size: 1.1rem; }
+    .photo-label {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: .5rem; height: 80px; border: 1.5px dashed var(--border-strong);
+        border-radius: var(--radius-sm); background: var(--surface-2);
+        color: var(--text-3); font-size: .8125rem; cursor: pointer;
+        transition: border-color .2s, color .2s;
+    }
+    .photo-label:hover { border-color: var(--accent); color: var(--accent); }
+    .photo-label i { font-size: 1.25rem; }
+    #fotoUsuarioInput { display: none; }
+    #photoPreview { display:none; width:64px; height:64px; border-radius:50%; object-fit:cover; border:2px solid var(--accent); }
+</style>
+
+<div class="auth-page">
+    <div class="auth-container">
+        <div class="auth-logo">
+            <div class="auth-logo-icon"><img src="~/logo.png" alt="RealEstateApp logo" /></div>
+            <h1>Crear cuenta</h1>
+            <p>Completa tus datos para unirte a RealEstate</p>
+        </div>
+        <div class="auth-card">
+            @if (!ViewData.ModelState.IsValid && ViewData.ModelState.Values.Any(v => v.Errors.Count > 0))
+            {
+                <div class="alert-auth">
+                    <i class="bi bi-exclamation-circle-fill"></i>
+                    <div>
+                        @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <div>@err.ErrorMessage</div>
+                        }
+                    </div>
+                </div>
+            }
+            <form asp-action="Registro" method="post" enctype="multipart/form-data" novalidate>
+
+                <p class="section-title">Tipo de cuenta</p>
+                <div class="role-selector mb-4">
+                    <button type="button" class="role-btn" id="btnCliente" onclick="setRole('Cliente')">
+                        <i class="bi bi-person-fill"></i> Cliente
+                    </button>
+                    <button type="button" class="role-btn" id="btnAgente" onclick="setRole('Agente')">
+                        <i class="bi bi-briefcase-fill"></i> Agente
+                    </button>
+                </div>
+                <input asp-for="TipoUsuario" type="hidden" id="hiddenTipoUsuario" />
+                <span asp-validation-for="TipoUsuario" class="text-danger"></span>
+
+                <p class="section-title">Información personal</p>
+                <div class="row g-3 mb-3">
+                    <div class="col-sm-6">
+                        <label asp-for="Nombre" class="form-label">Nombre</label>
+                        <input asp-for="Nombre" class="form-control" placeholder="Tu nombre" />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-6">
+                        <label asp-for="Apellido" class="form-label">Apellido</label>
+                        <input asp-for="Apellido" class="form-control" placeholder="Tu apellido" />
+                        <span asp-validation-for="Apellido" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-6">
+                        <label asp-for="Telefono" class="form-label">Teléfono</label>
+                        <input asp-for="Telefono" class="form-control" placeholder="+1 (000) 000-0000" />
+                        <span asp-validation-for="Telefono" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-6">
+                        <label asp-for="Correo" class="form-label">Correo electrónico</label>
+                        <input asp-for="Correo" class="form-control" placeholder="tu@correo.com" autocomplete="email" />
+                        <span asp-validation-for="Correo" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <p class="section-title">Acceso</p>
+                <div class="row g-3 mb-3">
+                    <div class="col-12">
+                        <label asp-for="NombreUsuario" class="form-label">Nombre de usuario</label>
+                        <input asp-for="NombreUsuario" class="form-control" placeholder="nombreusuario" autocomplete="username" />
+                        <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-6">
+                        <label asp-for="Contrasena" class="form-label">Contraseña</label>
+                        <div class="input-wrap">
+                            <input asp-for="Contrasena" id="inpRegPass" type="password"
+                                   class="form-control" placeholder="••••••••" autocomplete="new-password" />
+                            <button type="button" class="btn-eye" id="btnRegEye1" aria-label="Ver contraseña">
+                                <i class="bi bi-eye" id="regEye1"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="Contrasena" class="text-danger"></span>
+                    </div>
+                    <div class="col-sm-6">
+                        <label asp-for="ConfirmarContrasena" class="form-label">Confirmar contraseña</label>
+                        <div class="input-wrap">
+                            <input asp-for="ConfirmarContrasena" id="inpRegPass2" type="password"
+                                   class="form-control" placeholder="••••••••" autocomplete="new-password" />
+                            <button type="button" class="btn-eye" id="btnRegEye2" aria-label="Ver contraseña">
+                                <i class="bi bi-eye" id="regEye2"></i>
+                            </button>
+                        </div>
+                        <span asp-validation-for="ConfirmarContrasena" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <p class="section-title">Foto de perfil <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:.75rem;">(opcional)</span></p>
+                <div class="mb-4 d-flex align-items-center gap-3">
+                    <img id="photoPreview" src="" alt="Vista previa" />
+                    <label class="photo-label flex-grow-1" for="fotoUsuarioInput">
+                        <i class="bi bi-cloud-upload"></i>
+                        <span id="photoLabelText">Haz clic para subir una imagen</span>
+                    </label>
+                    <input asp-for="FotoUsuario" type="file" id="fotoUsuarioInput" accept="image/*" />
+                </div>
+
+                <button type="submit" class="btn-auth-primary">
+                    <i class="bi bi-person-check-fill"></i> Crear cuenta
+                </button>
+            </form>
+        </div>
+        <div class="auth-footer">
+            ¿Ya tienes cuenta? <a asp-action="Login">Inicia sesión</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+(function(){
+    // Toggle contraseña 1
+    function togglePass(inpId, iconId){
+        var inp = document.getElementById(inpId);
+        var ico = document.getElementById(iconId);
+        return function(){
+            if(inp.type==='password'){ inp.type='text'; ico.classList.replace('bi-eye','bi-eye-slash'); }
+            else { inp.type='password'; ico.classList.replace('bi-eye-slash','bi-eye'); }
+        };
+    }
+    document.getElementById('btnRegEye1').addEventListener('click', togglePass('inpRegPass','regEye1'));
+    document.getElementById('btnRegEye2').addEventListener('click', togglePass('inpRegPass2','regEye2'));
+
+    // Role selector
+    window.setRole = function(role){
+        document.getElementById('hiddenTipoUsuario').value = role;
+        document.getElementById('btnCliente').classList.toggle('active', role==='Cliente');
+        document.getElementById('btnAgente').classList.toggle('active', role==='Agente');
+    };
+
+    // Pre-seleccionar rol si vuelve el modelo con error
+    var current = document.getElementById('hiddenTipoUsuario').value;
+    if(current) window.setRole(current);
+
+    // Preview foto
+    document.getElementById('fotoUsuarioInput').addEventListener('change', function(){
+        var file = this.files[0];
+        if(!file) return;
+        var reader = new FileReader();
+        reader.onload = function(e){
+            var prev = document.getElementById('photoPreview');
+            prev.src = e.target.result;
+            prev.style.display = 'block';
+            document.getElementById('photoLabelText').textContent = file.name;
+        };
+        reader.readAsDataURL(file);
+    });
+})();
+</script>
+<partial name="_ValidationScriptsPartial" />
+}

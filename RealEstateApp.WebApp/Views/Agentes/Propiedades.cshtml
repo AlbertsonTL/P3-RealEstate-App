@@ -1,0 +1,19 @@
+@model RealEstateApp.WebApp.ViewModels.Agente.DetalleAgenteConPropiedadesViewModel
+@{
+    ViewData["Title"] = "Propiedades del agente";
+}
+
+<div class="d-flex align-items-center gap-3 mb-3">
+    <img src="@Model.UrlFotoAgente" class="rounded-circle" style="width:80px;height:80px;object-fit:cover;" />
+    <h2 class="mb-0">@Model.NombreAgente</h2>
+</div>
+
+@* FIX: Todas las pantallas de listado deben incluir los mismos filtros del Home (spec §Requisitos Funcionales) *@
+<partial name="_PanelFiltros" model="Model.Filtros" />
+
+<div class="row row-cols-1 row-cols-md-3 g-3 mt-1">
+@foreach (var propiedad in Model.Propiedades)
+{
+    <div class="col"><partial name="_TarjetaPropiedad" model="propiedad" /></div>
+}
+</div>
