@@ -31,7 +31,10 @@ namespace RealEstateApp.Infrastructure.Identity.Extensiones
                 options.User.RequireUniqueEmail = true;
             })
                 .AddEntityFrameworkStores<IdentityDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                // Traduce al español todos los mensajes de error de Identity
+                // (contraseñas, correos/usuarios duplicados, tokens, roles, etc.).
+                .AddErrorDescriber<DescriptorErroresIdentidadEspanol>();
 
             servicios.AddAuthentication()
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>

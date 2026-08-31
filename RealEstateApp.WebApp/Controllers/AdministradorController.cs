@@ -167,13 +167,13 @@ public class AdministradorController : Controller
     {
         if (!ModelState.IsValid)
         {
-            TempData["Error"] = "Datos inválidos para crear el administrador.";
+            TempData["Error"] = ObtenerErroresModelState();
             return RedirectToAction(nameof(Administradores));
         }
         var resultado = await CrearUsuarioPorRolAsync(modelo, "Administrador", true);
-        TempData[resultado ? "Exito" : "Error"] = resultado
+        TempData[resultado.Exito ? "Exito" : "Error"] = resultado.Exito
             ? "Administrador creado correctamente."
-            : "No fue posible crear el administrador.";
+            : resultado.Error ?? "No fue posible crear el administrador.";
         return RedirectToAction(nameof(Administradores));
     }
 
@@ -218,13 +218,13 @@ public class AdministradorController : Controller
         }
         if (!ModelState.IsValid)
         {
-            TempData["Error"] = "Datos inválidos para actualizar el administrador.";
+            TempData["Error"] = ObtenerErroresModelState();
             return View(modelo);
         }
         var resultado = await EditarUsuarioPorRolAsync(modelo, "Administrador");
-        if (!resultado)
+        if (!resultado.Exito)
         {
-            TempData["Error"] = "No fue posible actualizar el administrador.";
+            TempData["Error"] = resultado.Error ?? "No fue posible actualizar el administrador.";
             return View(modelo);
         }
         TempData["Exito"] = "Administrador actualizado correctamente.";
@@ -287,13 +287,13 @@ public class AdministradorController : Controller
     {
         if (!ModelState.IsValid)
         {
-            TempData["Error"] = "Datos inválidos para crear el desarrollador.";
+            TempData["Error"] = ObtenerErroresModelState();
             return RedirectToAction(nameof(Desarrolladores));
         }
         var resultado = await CrearUsuarioPorRolAsync(modelo, "Desarrollador", true);
-        TempData[resultado ? "Exito" : "Error"] = resultado
+        TempData[resultado.Exito ? "Exito" : "Error"] = resultado.Exito
             ? "Desarrollador creado correctamente."
-            : "No fue posible crear el desarrollador.";
+            : resultado.Error ?? "No fue posible crear el desarrollador.";
         return RedirectToAction(nameof(Desarrolladores));
     }
 
@@ -324,13 +324,13 @@ public class AdministradorController : Controller
     {
         if (!ModelState.IsValid)
         {
-            TempData["Error"] = "Datos inválidos para actualizar el desarrollador.";
+            TempData["Error"] = ObtenerErroresModelState();
             return View(modelo);
         }
         var resultado = await EditarUsuarioPorRolAsync(modelo, "Desarrollador");
-        if (!resultado)
+        if (!resultado.Exito)
         {
-            TempData["Error"] = "No fue posible actualizar el desarrollador.";
+            TempData["Error"] = resultado.Error ?? "No fue posible actualizar el desarrollador.";
             return View(modelo);
         }
         TempData["Exito"] = "Desarrollador actualizado correctamente.";
@@ -346,6 +346,101 @@ public class AdministradorController : Controller
             ? "Desarrollador eliminado correctamente."
             : "No fue posible eliminar el desarrollador.";
         return RedirectToAction(nameof(Desarrolladores));
+    }
+
+    // Clientes
+    [HttpGet]
+    public async Task<IActionResult> Clientes()
+    {
+        var clientes = await _userManager.GetUsersInRoleAsync("Cliente");
+        return View(clientes.OrderBy(x => x.Nombre).ThenBy(x => x.Apellido).ToList());
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CrearCliente(CrearAdminViewModel modelo)
+    {
+        if (!ModelState.IsValid)
+        {
+            TempData["Error"] = ObtenerErroresModelState();
+            return RedirectToAction(nameof(Clientes));
+        }
+        // Los clientes creados por un administrador quedan activos de inmediato
+        // (no requieren pasar por el correo de activación, a diferencia del autoregistro público).
+        var resultado = await CrearUsuarioPorRolAsync(modelo, "Cliente", true);
+        TempData[resultado.Exito ? "Exito" : "Error"] = resultado.Exito
+            ? "Cliente creado correctamente."
+            : resultado.Error ?? "No fue posible crear el cliente.";
+        return RedirectToAction(nameof(Clientes));
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> EditarCliente(string id)
+    {
+        var usuario = await _userManager.FindByIdAsync(id);
+        if (usuario is null || !await _userManager.IsInRoleAsync(usuario, "Cliente"))
+        {
+            TempData["Error"] = "El cliente no existe.";
+            return RedirectToAction(nameof(Clientes));
+        }
+        return View(new EditarAdminViewModel
+        {
+            Id = usuario.Id,
+            Nombre = usuario.Nombre,
+            Apellido = usuario.Apellido,
+            Cedula = usuario.Cedula ?? string.Empty,
+            Telefono = usuario.Telefono,
+            Correo = usuario.Email ?? string.Empty,
+            NombreUsuario = usuario.UserName ?? string.Empty
+        });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditarCliente(EditarAdminViewModel modelo)
+    {
+        if (!ModelState.IsValid)
+        {
+            TempData["Error"] = ObtenerErroresModelState();
+            return View(modelo);
+        }
+        var resultado = await EditarUsuarioPorRolAsync(modelo, "Cliente");
+        if (!resultado.Exito)
+        {
+            TempData["Error"] = resultado.Error ?? "No fue posible actualizar el cliente.";
+            return View(modelo);
+        }
+        TempData["Exito"] = "Cliente actualizado correctamente.";
+        return RedirectToAction(nameof(Clientes));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CambiarEstadoCliente(string id)
+    {
+        var cliente = await _userManager.FindByIdAsync(id);
+        if (cliente is null || !await _userManager.IsInRoleAsync(cliente, "Cliente"))
+        {
+            TempData["Error"] = "El cliente no existe.";
+            return RedirectToAction(nameof(Clientes));
+        }
+        cliente.EstaActivo = !cliente.EstaActivo;
+        var resultado = await _userManager.UpdateAsync(cliente);
+        TempData[resultado.Succeeded ? "Exito" : "Error"] = resultado.Succeeded
+            ? $"Estado actualizado: {(cliente.EstaActivo ? "Activo" : "Inactivo")}."
+            : "No fue posible actualizar el estado del cliente.";
+        return RedirectToAction(nameof(Clientes));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EliminarCliente(string id)
+    {
+        var resultado = await EliminarUsuarioPorRolAsync(id, "Cliente");
+        TempData[resultado ? "Exito" : "Error"] = resultado
+            ? "Cliente eliminado correctamente."
+            : "No fue posible eliminar el cliente.";
+        return RedirectToAction(nameof(Clientes));
     }
 
     // Catálogos — Tipos de Propiedad (Fix 1 + Fix 7)
@@ -484,50 +579,101 @@ public class AdministradorController : Controller
     }
 
     // Helpers privados
-    private async Task<bool> CrearUsuarioPorRolAsync(CrearAdminViewModel modelo, string rol, bool estaActivo)
+
+    /// <summary>Resultado de una operación de creación/edición de usuario, con mensaje de error en español.</summary>
+    private readonly record struct ResultadoOperacion(bool Exito, string? Error)
     {
-        if (await _userManager.FindByNameAsync(modelo.NombreUsuario) is not null) return false;
-        if (await _userManager.FindByEmailAsync(modelo.Correo) is not null) return false;
+        public static ResultadoOperacion Ok() => new(true, null);
+        public static ResultadoOperacion Fallo(string error) => new(false, error);
+    }
+
+    private async Task<ResultadoOperacion> CrearUsuarioPorRolAsync(CrearAdminViewModel modelo, string rol, bool estaActivo)
+    {
+        var nombreUsuario = modelo.NombreUsuario.Trim();
+        var correo = modelo.Correo.Trim();
+
+        if (await _userManager.FindByNameAsync(nombreUsuario) is not null)
+            return ResultadoOperacion.Fallo("El nombre de usuario ya está en uso. Por favor elige otro.");
+
+        if (await _userManager.FindByEmailAsync(correo) is not null)
+            return ResultadoOperacion.Fallo("Este correo electrónico ya está registrado.");
+
         var usuario = new UsuarioAplicacion
         {
-            UserName = modelo.NombreUsuario.Trim(),
-            Email = modelo.Correo.Trim(),
+            UserName = nombreUsuario,
+            Email = correo,
             Nombre = modelo.Nombre.Trim(),
             Apellido = modelo.Apellido.Trim(),
             Cedula = modelo.Cedula.Trim(),
             Telefono = modelo.Telefono.Trim(),
             PhoneNumber = modelo.Telefono.Trim(),
             EstaActivo = estaActivo,
-            FechaRegistro = DateTime.UtcNow
+            FechaRegistro = DateTime.UtcNow,
+            // Los usuarios creados directamente por un administrador ya se consideran
+            // verificados: no necesitan pasar por el flujo de activación por correo.
+            EmailConfirmed = true
         };
+
         var resultado = await _userManager.CreateAsync(usuario, modelo.Contrasena);
-        if (!resultado.Succeeded) return false;
+        if (!resultado.Succeeded)
+            return ResultadoOperacion.Fallo(string.Join(" ", resultado.Errors.Select(e => e.Description)));
+
         var resultadoRol = await _userManager.AddToRoleAsync(usuario, rol);
-        if (resultadoRol.Succeeded) return true;
+        if (resultadoRol.Succeeded) return ResultadoOperacion.Ok();
+
         await _userManager.DeleteAsync(usuario);
-        return false;
+        return ResultadoOperacion.Fallo(string.Join(" ", resultadoRol.Errors.Select(e => e.Description)));
     }
 
-    private async Task<bool> EditarUsuarioPorRolAsync(EditarAdminViewModel modelo, string rol)
+    private async Task<ResultadoOperacion> EditarUsuarioPorRolAsync(EditarAdminViewModel modelo, string rol)
     {
         var usuario = await _userManager.FindByIdAsync(modelo.Id);
-        if (usuario is null || !await _userManager.IsInRoleAsync(usuario, rol)) return false;
+        if (usuario is null || !await _userManager.IsInRoleAsync(usuario, rol))
+            return ResultadoOperacion.Fallo("El usuario no existe.");
+
         var nombreUsuario = modelo.NombreUsuario.Trim();
         var correo = modelo.Correo.Trim();
+
         var u1 = await _userManager.FindByNameAsync(nombreUsuario);
-        if (u1 is not null && !string.Equals(u1.Id, usuario.Id, StringComparison.Ordinal)) return false;
+        if (u1 is not null && !string.Equals(u1.Id, usuario.Id, StringComparison.Ordinal))
+            return ResultadoOperacion.Fallo("El nombre de usuario ya está en uso por otro usuario.");
+
         var u2 = await _userManager.FindByEmailAsync(correo);
-        if (u2 is not null && !string.Equals(u2.Id, usuario.Id, StringComparison.Ordinal)) return false;
-        usuario.Nombre = modelo.Nombre.Trim(); usuario.Apellido = modelo.Apellido.Trim();
-        usuario.Cedula = modelo.Cedula.Trim(); usuario.UserName = nombreUsuario;
-        usuario.Email = correo; usuario.Telefono = modelo.Telefono.Trim(); usuario.PhoneNumber = modelo.Telefono.Trim();
+        if (u2 is not null && !string.Equals(u2.Id, usuario.Id, StringComparison.Ordinal))
+            return ResultadoOperacion.Fallo("Este correo electrónico ya está registrado por otro usuario.");
+
+        usuario.Nombre = modelo.Nombre.Trim();
+        usuario.Apellido = modelo.Apellido.Trim();
+        usuario.Cedula = modelo.Cedula.Trim();
+        usuario.Telefono = modelo.Telefono.Trim();
+        usuario.PhoneNumber = modelo.Telefono.Trim();
+
+        if (!string.Equals(usuario.UserName, nombreUsuario, StringComparison.Ordinal))
+        {
+            var rNombre = await _userManager.SetUserNameAsync(usuario, nombreUsuario);
+            if (!rNombre.Succeeded)
+                return ResultadoOperacion.Fallo(string.Join(" ", rNombre.Errors.Select(e => e.Description)));
+        }
+
+        if (!string.Equals(usuario.Email, correo, StringComparison.OrdinalIgnoreCase))
+        {
+            var rCorreo = await _userManager.SetEmailAsync(usuario, correo);
+            if (!rCorreo.Succeeded)
+                return ResultadoOperacion.Fallo(string.Join(" ", rCorreo.Errors.Select(e => e.Description)));
+        }
+
         if (!string.IsNullOrWhiteSpace(modelo.Contrasena))
         {
             var token = await _userManager.GeneratePasswordResetTokenAsync(usuario);
             var rp = await _userManager.ResetPasswordAsync(usuario, token, modelo.Contrasena);
-            if (!rp.Succeeded) return false;
+            if (!rp.Succeeded)
+                return ResultadoOperacion.Fallo(string.Join(" ", rp.Errors.Select(e => e.Description)));
         }
-        return (await _userManager.UpdateAsync(usuario)).Succeeded;
+
+        var resultadoFinal = await _userManager.UpdateAsync(usuario);
+        return resultadoFinal.Succeeded
+            ? ResultadoOperacion.Ok()
+            : ResultadoOperacion.Fallo(string.Join(" ", resultadoFinal.Errors.Select(e => e.Description)));
     }
 
     private async Task<bool> EliminarUsuarioPorRolAsync(string id, string rol)
@@ -536,4 +682,8 @@ public class AdministradorController : Controller
         if (usuario is null || !await _userManager.IsInRoleAsync(usuario, rol)) return false;
         return (await _userManager.DeleteAsync(usuario)).Succeeded;
     }
+
+    /// <summary>Une los mensajes de validación del ModelState en un solo texto en español.</summary>
+    private string ObtenerErroresModelState()
+        => string.Join(" ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
 }

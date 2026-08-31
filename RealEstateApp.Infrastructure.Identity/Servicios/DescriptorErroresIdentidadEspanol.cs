@@ -5,7 +5,7 @@ namespace RealEstateApp.Infrastructure.Identity.Servicios
     /// <summary>
     /// Traduce al español todos los mensajes de error que genera ASP.NET Core Identity
     /// (creación de usuarios, contraseñas, roles, etc.), ya que por defecto se generan en inglés.
-    /// Se registra mediante AddErrorDescriber DescriptorErroresIdentidadEspanol() para que
+    /// Se registra mediante AddErrorDescriber&lt;DescriptorErroresIdentidadEspanol&gt;() para que
     /// TODO el sistema (WebApp y WebApi) reciba mensajes en español sin necesidad de traducirlos
     /// manualmente en cada controlador o servicio.
     /// </summary>
