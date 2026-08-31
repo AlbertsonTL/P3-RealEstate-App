@@ -9,6 +9,6 @@ public class ChatClienteViewModel
     public string AgenteId { get; set; } = string.Empty;
     public List<ChatMensajeViewModel> Mensajes { get; set; } = [];
 
-    [Required]
+    [Required(ErrorMessage = "Debes escribir un mensaje.")]
     public string NuevoMensaje { get; set; } = string.Empty;
 }

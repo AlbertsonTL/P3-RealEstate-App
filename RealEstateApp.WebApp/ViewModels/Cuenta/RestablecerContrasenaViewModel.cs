@@ -4,10 +4,10 @@ namespace RealEstateApp.WebApp.ViewModels.Cuenta;
 
 public class RestablecerContrasenaViewModel
 {
-    [Required]
+    [Required(ErrorMessage = "El identificador de usuario es obligatorio.")]
     public string UsuarioId { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "El token de recuperación es obligatorio.")]
     public string Token { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "La nueva contraseña es requerida.")]

@@ -7,7 +7,7 @@ public class ChatMensajeViewModel
     public string RemitenteId { get; set; } = string.Empty;
     public string NombreRemitente { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "El mensaje no puede estar vacío.")]
     public string Contenido { get; set; } = string.Empty;
 
     public DateTime FechaEnvio { get; set; }
