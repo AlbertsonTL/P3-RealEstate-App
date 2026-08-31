@@ -1,0 +1,32 @@
+@model RealEstateApp.WebApp.ViewModels.Admin.EditarAdminViewModel
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Editar Cliente";
+}
+
+<h2 class="mb-3">Editar Cliente</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form asp-action="EditarCliente" method="post">
+            @Html.AntiForgeryToken()
+            <input asp-for="Id" type="hidden" />
+            <div class="row g-3">
+                <div class="col-md-6"><label asp-for="Nombre" class="form-label"></label><input asp-for="Nombre" class="form-control" /></div>
+                <div class="col-md-6"><label asp-for="Apellido" class="form-label"></label><input asp-for="Apellido" class="form-control" /></div>
+                <div class="col-md-4"><label asp-for="Cedula" class="form-label"></label><input asp-for="Cedula" class="form-control" /></div>
+                <div class="col-md-4"><label asp-for="Telefono" class="form-label"></label><input asp-for="Telefono" class="form-control" /></div>
+                <div class="col-md-4"><label asp-for="NombreUsuario" class="form-label"></label><input asp-for="NombreUsuario" class="form-control" /></div>
+                <div class="col-md-6"><label asp-for="Correo" class="form-label"></label><input asp-for="Correo" class="form-control" /></div>
+                <div class="col-md-6">
+                    <label asp-for="Contrasena" class="form-label"></label>
+                    <input asp-for="Contrasena" class="form-control" placeholder="Opcional: solo si desea cambiarla" />
+                </div>
+            </div>
+            <div class="mt-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                <a asp-action="Clientes" class="btn btn-outline-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+@model List<RealEstateApp.Infrastructure.Identity.Entidades.UsuarioAplicacion>
+@{ Layout = "_LayoutAdmin"; ViewData["Title"] = "Clientes"; }
+
+<div class="admin-page-header d-flex align-items-start justify-content-between flex-wrap gap-2">
+    <div><h1>Clientes</h1><p class="page-subtitle">Gestiona los usuarios con rol de cliente</p></div>
+    <span class="badge text-bg-primary align-self-center fs-6 px-3 py-2">@Model.Count registros</span>
+</div>
+@if (TempData["Exito"] is string exito) { <div class="alert alert-success mb-3"><i class="bi bi-check-circle me-2"></i>@exito</div> }
+@if (TempData["Error"]  is string error) { <div class="alert alert-danger  mb-3"><i class="bi bi-x-circle me-2"></i>@error</div> }
+
+<div class="card mb-3">
+    <div class="card-header"><i class="bi bi-person-plus me-2"></i>Crear cliente</div>
+    <div class="card-body">
+        <form asp-action="CrearCliente" method="post">
+            @Html.AntiForgeryToken()
+            <div class="row g-2">
+                <div class="col-md-3"><label class="form-label">Nombre</label><input class="form-control" name="Nombre" placeholder="Nombre" required /></div>
+                <div class="col-md-3"><label class="form-label">Apellido</label><input class="form-control" name="Apellido" placeholder="Apellido" required /></div>
+                <div class="col-md-3"><label class="form-label">Cédula</label><input class="form-control" name="Cedula" placeholder="Cédula" required /></div>
+                <div class="col-md-3"><label class="form-label">Teléfono</label><input class="form-control" name="Telefono" placeholder="Teléfono" required /></div>
+                <div class="col-md-4"><label class="form-label">Correo</label><input type="email" class="form-control" name="Correo" placeholder="correo@ejemplo.com" required /></div>
+                <div class="col-md-4"><label class="form-label">Usuario</label><input class="form-control" name="NombreUsuario" placeholder="nombre.usuario" required /></div>
+                <div class="col-md-2"><label class="form-label">Contraseña</label><input type="password" class="form-control" name="Contrasena" required /></div>
+                <div class="col-md-2"><label class="form-label">Confirmar</label><input type="password" class="form-control" name="ConfirmarContrasena" required /></div>
+                <div class="col-12 text-end mt-1"><button type="submit" class="btn btn-primary"><i class="bi bi-plus me-1"></i>Crear</button></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead><tr><th>Nombre</th><th>Usuario</th><th>Correo</th><th>Cédula</th><th>Teléfono</th><th class="text-center">Estado</th><th class="text-end pe-4">Acciones</th></tr></thead>
+                <tbody>
+                @if (!Model.Any()) { <tr><td colspan="7"><div class="empty-state"><i class="bi bi-person empty-icon"></i><p>Sin clientes.</p></div></td></tr> }
+                else { @foreach (var cliente in Model) {
+                    <tr>
+                        <td><span class="td-strong">@cliente.Nombre @cliente.Apellido</span></td>
+                        <td class="td-muted">@cliente.UserName</td>
+                        <td class="td-muted">@cliente.Email</td>
+                        <td class="td-faint">@cliente.Cedula</td>
+                        <td class="td-faint">@cliente.Telefono</td>
+                        <td class="text-center">
+                            <span class="badge @(cliente.EstaActivo ? "text-bg-success" : "text-bg-secondary")">
+                                @(cliente.EstaActivo ? "Activo" : "Inactivo")
+                            </span>
+                        </td>
+                        <td class="text-end pe-4">
+                            <div class="d-inline-flex gap-2 flex-wrap justify-content-end">
+                                <a asp-action="EditarCliente" asp-route-id="@cliente.Id" class="btn btn-sm btn-outline-primary">Editar</a>
+                                <form asp-action="CambiarEstadoCliente" method="post" class="m-0">
+                                    @Html.AntiForgeryToken()<input type="hidden" name="id" value="@cliente.Id" />
+                                    <button type="submit" class="btn btn-sm @(cliente.EstaActivo ? "btn-outline-warning" : "btn-outline-success")">
+                                        @(cliente.EstaActivo ? "Inactivar" : "Activar")
+                                    </button>
+                                </form>
+                                <form asp-action="EliminarCliente" method="post" class="m-0"
+                                      data-confirmar-eliminar
+                                      data-titulo-eliminar="Eliminar cliente"
+                                      data-mensaje-eliminar="¿Deseas eliminar este cliente? Esta acción no se puede deshacer.">
+                                    @Html.AntiForgeryToken()<input type="hidden" name="id" value="@cliente.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                } }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
