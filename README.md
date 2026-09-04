@@ -174,6 +174,27 @@ RealEstateApp/
 └── RealEstateApp.Tests/                # Pruebas unitarias e integración
 ```
 
+## 👥 Contribuidores
+
+<table>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/AlbertsonTL">
+        <img src="https://github.com/AlbertsonTL.png" width="100px" height="100px" style="border-radius: 50%;" alt="AlbertsonTL"/>
+        <br />
+        <sub><b>AlbertsonTL</b></sub>
+      </a>
+    </td>
+    <td align="center">
+      <a href="https://github.com/GeraldGG10">
+        <img src="https://github.com/GeraldGG10.png" width="100px" height="100px" style="border-radius: 50%;" alt="GeraldGG10"/>
+        <br />
+        <sub><b>GeraldGG10</b></sub>
+      </a>
+    </td>
+  </tr>
+</table>
+
 ## Licencia
 
 Este proyecto está bajo la Licencia MIT.
