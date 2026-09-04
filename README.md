@@ -180,15 +180,15 @@ RealEstateApp/
   <tr>
     <td align="center">
       <a href="https://github.com/AlbertsonTL">
-        <img src="https://github.com/AlbertsonTL.png" width="100px" height="100px" style="border-radius: 50%;" alt="AlbertsonTL"/>
-        <br />
+        <img src="https://avatars.githubusercontent.com/AlbertsonTL?s=200" width="100" height="100" alt="AlbertsonTL">
+        <br>
         <sub><b>AlbertsonTL</b></sub>
       </a>
     </td>
     <td align="center">
       <a href="https://github.com/GeraldGG10">
-        <img src="https://github.com/GeraldGG10.png" width="100px" height="100px" style="border-radius: 50%;" alt="GeraldGG10"/>
-        <br />
+        <img src="https://avatars.githubusercontent.com/GeraldGG10?s=200" width="100" height="100" alt="GeraldGG10">
+        <br>
         <sub><b>GeraldGG10</b></sub>
       </a>
     </td>
